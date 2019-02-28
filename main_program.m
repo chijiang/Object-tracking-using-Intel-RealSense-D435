@@ -30,7 +30,7 @@ function [output1,output2] = main_program()
     config.enable_stream(realsense.stream.color, 1280, 720, realsense.format.rgb8, 30)
     
     % Initialize a pointcloud object to calculate the point cloud of target
-    % work piece.
+    % workpiece.
     pointcloud = realsense.pointcloud();
     
     % Initialize a colorizer object for visualization of the depth image.
@@ -78,18 +78,54 @@ function [output1,output2] = main_program()
     % Preprocessing of the streaming. During this part of the program,
     % several frames of the video streaming will be taken. With help of the
     % depth image, the foreground of the images will be located, which is
-    % the ROI containing the target work piece. Afterwards, a point cloud
-    % of the work piece will be calculated for object recognition. Finally,
+    % the ROI containing the target workpiece. Afterwards, a point cloud
+    % of the workpiece will be calculated for object recognition. Finally,
     % the prestored welding position of the object will be converted to the
-    % real position on the work piece.
+    % real position on the workpiece.
     
     % Start des Timers
     tic;
     for frame = 1 : Constants.NumOfFrames
         % Getting one frame from the camera.
-        [depth, depth_img, color_img] = getFrame_Realsense(pipe, colorizer, alignedFs);
+        [depth, depth_img, color_img] = getFrame_Realsense(pipe,...
+            colorizer, alignedFs);
         
+        % When the frames were created is cached, if the frame is used to 
+        % position the workpiece carrier, the time in "TimeArray" is 
+        % overwritten.
+        T = toc;
         
+        % Foreground detector, which isolates the workpiece carrier from 
+        % the background, outputs among other things the pixel area of the 
+        % workpiece carrier.
+        [Ishape,centroid,depth_uint8, bbox] = foregrndDetection(...
+            depth_img,Constants.background,BlobAnalysis,color_img);
+        
+        % If the workpiece carrier can be isolated, the program sequence
+        % will continue unless new frames are created and the program 
+        % sequence starts from the beginning.
+        if ~isempty(centroid)
+            % Creating the point cloud of the workpiece.
+            ptCloud = get_PointCloud(depth, centroid, bbox, pointcloud);
+            % The point cloud is for the workpiece recognization and 
+            % classification. All data and standard point clouds of the
+            % different types of the workpieces are stored in the reference
+            % databank, which will be used for comparison with the ICP
+            % algorithms.
+            if isempty(ObjectID)
+                [errValue, ObjectID] = ICP_Classification(...
+                    ptCloud,Referenzdatenbank,Constants);
+                % If the error is greater than a threshold, the
+                % classification is not confident enough for the object
+                % recognization.
+                if errValue > Constants.ConfidenceInterval
+                   ObjectID = [];
+                   continue
+                end
+            end
+            
+            
+        end
     end
     
     
