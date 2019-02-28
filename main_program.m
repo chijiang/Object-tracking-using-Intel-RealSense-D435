@@ -16,11 +16,11 @@ function [output1,output2] = main_program()
     %
     % Other m-files required: none
     % Subfunctions: none
-    % MAT-files required: none
+    % MAT-files required: Constants_1.mat  Referenzdatenbank9_2.mat
     %
     % Author: Chijiang Duan
     % email: chijiang.duan@tu-braunschweig.de
-    % Feb 2019;
+    % Feb 2019; Version 1.0.1
     %------------- BEGIN CODE --------------
     
     % Initialize the camera
@@ -48,7 +48,7 @@ function [output1,output2] = main_program()
     depth_sensor.set_option(realsense.option.visual_preset, 0);
     
     % Creating a BlobAnalysis object for foreground detecting.
-    BlobAnalysis = vision.BlobAnalysis('MinimumBlobArea',32000,...
+    blobAnalysis = vision.BlobAnalysis('MinimumBlobArea',32000,...
         'MaximumBlobArea',100000);
     
     % Loading the necessary data.
@@ -67,13 +67,13 @@ function [output1,output2] = main_program()
     PosArray = zeros(Constants.PositionCount,3);
     
     
-    ObjectID = [];  % For object recognition
-    WeldingAverageArray = [];  % Vector of welding position
+    objectID = [];  % For object recognition
+    weldingAverageArray = [];  % Vector of welding position
     
     % Counter to count the number of successful pallet position detectors. 
     % When the counter reaches its limit, the direction vector is sent to 
     % the last position of the pallet on the robot controller
-    Counter = 1;
+    counter = 1;
     
     % Preprocessing of the streaming. During this part of the program,
     % several frames of the video streaming will be taken. With help of the
@@ -99,7 +99,7 @@ function [output1,output2] = main_program()
         % the background, outputs among other things the pixel area of the 
         % workpiece carrier.
         [Ishape,centroid,depth_uint8, bbox] = foregrndDetection(...
-            depth_img,Constants.background,BlobAnalysis,color_img);
+            depth_img,Constants.background,blobAnalysis,color_img);
         
         % If the workpiece carrier can be isolated, the program sequence
         % will continue unless new frames are created and the program 
@@ -112,19 +112,49 @@ function [output1,output2] = main_program()
             % different types of the workpieces are stored in the reference
             % databank, which will be used for comparison with the ICP
             % algorithms.
-            if isempty(ObjectID)
-                [errValue, ObjectID] = ICP_Classification(...
+            if isempty(objectID)
+                [errValue, objectID] = ICP_Classification(...
                     ptCloud,Referenzdatenbank,Constants);
                 % If the error is greater than a threshold, the
                 % classification is not confident enough for the object
                 % recognization.
                 if errValue > Constants.ConfidenceInterval
-                   ObjectID = [];
+                   objectID = [];
                    continue
                 end
             end
-            
-            
+            % Detecting the Binary markers.
+            centersBright = DetectCircles (bbox_color, color_img);
+            % Make sure all binary markers have been detected. If not, 
+            % the program starts again from the beginning.
+            if size(centersBright,1) ==3
+                [Alpha,centerLoc] = get_GlobalPos(...
+                    centersBright,crop_color,crop_depth,Constants);
+                % Record the time into the time vector.
+                TimeArray(counter) = T;
+                % Record the position into the position vector.
+                PosArray(counter,:) = centerLoc;
+                
+                % Calculate the coordinate of the welding point.
+                weldingPos = get_ObjectPosition(ptCloud,...
+                    Referenzdatenbank,objectID,Constants);
+                
+                % Visulizing the result.
+                videoFrame = create_VideoFrame(Ishape,WeldingPos,Constants);
+                videoPlayer(videoFrame);
+                
+                % The vector from the center location of the workpiece
+                % pointing to the welding position.
+                weldingVector = weldingPos-centerLoc;
+                
+                % Calculation of the average moving direction of the
+                % welding position.
+                if counter == 1
+                    
+                elseif
+                    
+                end
+            end
         end
     end
     
