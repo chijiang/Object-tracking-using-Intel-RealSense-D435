@@ -1,12 +1,14 @@
 function [output1,output2] = main_program()
     % main_program - the main function to activate the Intel® RealSense™
-    % D435 camera for the use of "Dynamisierte Fertigungsketten". This 
-    % program needs to be used with Intel® RealSense™ SDK 2.0 and its
-    % MATLAB wrapper, which can be downloaded from:
-    % https://github.com/IntelRealSense/librealsense
+    % 	D435 camera for the use of "Dynamisierte Fertigungsketten". This 
+    % 	program needs to be used with Intel® RealSense™ SDK 2.0 and its
+    % 	MATLAB wrapper, which can be downloaded from:
+    % 	https://github.com/IntelRealSense/librealsense
     % 
     % The original program was designed by Henrik Wilhelm Becker in his
-    % bachelor thesis for a Microsoft Kinect v2 camera.
+    % bachelor thesis for a Microsoft Kinect v2 camera. This version of 
+	% the program is reprogrammed by Chijiang Duan for Intel® RealSense™
+	% D435 and its SDK v2.0.
     %
     % Syntax:  [output1,output2] = main_program()
     %
@@ -14,7 +16,15 @@ function [output1,output2] = main_program()
     %    output1 - Description
     %    output2 - Description
     %
-    % Other m-files required: none
+    % Other m-files required: 	CameraCoorToRGB.m
+	%							create_VideoFrame.m
+	%							DetectCircles.m 
+	%							foregrndDetection.m 
+	%							get_GlobalPos.m 
+	%							get_ObjectPosition.m
+	%							get_PointCloud.m 
+	%							getFrame_Realsense.m 
+	%							ICP_Classification.m 
     % Subfunctions: none
     % MAT-files required: Constants_1.mat  Referenzdatenbank9_2.mat
     %
@@ -26,8 +36,10 @@ function [output1,output2] = main_program()
     % Initialize the camera
     pipe = realsense.pipeline();
     config = realsense.config();
-    config.enable_stream(realsense.stream.depth, 1280, 720, realsense.format.z16, 30)
-    config.enable_stream(realsense.stream.color, 1280, 720, realsense.format.rgb8, 30)
+    config.enable_stream(realsense.stream.depth,...
+		1280, 720, realsense.format.z16, 30)
+    config.enable_stream(realsense.stream.color,...
+		1280, 720, realsense.format.rgb8, 30)
     
     % Initialize a pointcloud object to calculate the point cloud of target
     % workpiece.
@@ -150,9 +162,9 @@ function [output1,output2] = main_program()
                 % Calculation of the average moving direction of the
                 % welding position.
                 if counter == 1
-                    
+                    weldingAverageArray = weldingVector;
                 elseif
-                    
+                    weldingAverageArray = (weldingVector + weldingAverageArray) / 2;
                 end
             end
         end
