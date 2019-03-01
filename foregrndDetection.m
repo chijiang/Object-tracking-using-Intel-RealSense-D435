@@ -28,7 +28,7 @@ function [Ishape,centroid,depth_uint8, bbox] = foregrndDetection(depth_img,backg
     %------------- BEGIN CODE --------------
 	Ishape = [];
 	% konvertierung des Tiefenbildes in einem Binärbild mit Datentyp uint8
-	depth_uint8 = TiefenbildBinarisierung(depth_img, 220); 
+	depth_uint8 = depth_image_binarize(depth_img, 220); 
 	%Kleine Objekte entfernen, (Alle Objekte unter 200 Pixel)
 	depth_uint8 = bwareaopen(depth_uint8,200);
 	% Vordergrund extrahieren

@@ -99,13 +99,13 @@ function [output1,output2] = main_program()
     tic;
     for frame = 1 : Constants.NumOfFrames
         % Getting one frame from the camera.
-        [depth, depth_img, color_img] = getFrame_Realsense(pipe,...
+        [depth, depth_img, color_img] = next_frame(pipe,...
             colorizer, alignedFs);
         
         % When the frames were created is cached, if the frame is used to 
         % position the workpiece carrier, the time in "TimeArray" is 
         % overwritten.
-        T = toc;
+        t = toc;
         
         % Foreground detector, which isolates the workpiece carrier from 
         % the background, outputs among other things the pixel area of the 
@@ -118,14 +118,14 @@ function [output1,output2] = main_program()
         % sequence starts from the beginning.
         if ~isempty(centroid)
             % Creating the point cloud of the workpiece.
-            ptCloud = get_PointCloud(depth, centroid, bbox, pointcloud);
+            ptCloud = calculate_ptCloud(depth, centroid, bbox, pointcloud);
             % The point cloud is for the workpiece recognization and 
             % classification. All data and standard point clouds of the
             % different types of the workpieces are stored in the reference
             % databank, which will be used for comparison with the ICP
             % algorithms.
             if isempty(objectID)
-                [errValue, objectID] = ICP_Classification(...
+                [errValue, objectID] = icp_Classification(...
                     ptCloud,Referenzdatenbank,Constants);
                 % If the error is greater than a threshold, the
                 % classification is not confident enough for the object
@@ -136,40 +136,65 @@ function [output1,output2] = main_program()
                 end
             end
             % Detecting the Binary markers.
-            centersBright = DetectCircles (bbox_color, color_img);
+            centersBright = findBinMarkers(bbox_color, color_img);
             % Make sure all binary markers have been detected. If not, 
             % the program starts again from the beginning.
             if size(centersBright,1) ==3
-                [Alpha,centerLoc] = get_GlobalPos(...
-                    centersBright,crop_color,crop_depth,Constants);
+                [Alpha,centerLoc] = global_position(...
+                centersBright,crop_color,crop_depth,Constants);
                 % Record the time into the time vector.
-                TimeArray(counter) = T;
+                TimeArray(counter) = t;
                 % Record the position into the position vector.
                 PosArray(counter,:) = centerLoc;
-                
+
                 % Calculate the coordinate of the welding point.
-                weldingPos = get_ObjectPosition(ptCloud,...
-                    Referenzdatenbank,objectID,Constants);
-                
+                weldingPos = object_position(ptCloud,...
+                Referenzdatenbank,objectID,Constants);
+
                 % Visulizing the result.
                 videoFrame = create_VideoFrame(Ishape,WeldingPos,Constants);
                 videoPlayer(videoFrame);
-                
+
                 % The vector from the center location of the workpiece
                 % pointing to the welding position.
                 weldingVector = weldingPos-centerLoc;
-                
+
                 % Calculation of the average moving direction of the
                 % welding position.
                 if counter == 1
                     weldingAverageArray = weldingVector;
-                elseif
+                elseif counter > 1
                     weldingAverageArray = (weldingVector + weldingAverageArray) / 2;
                 end
+                
+                % If the detection succeeded, add one to the counter.
+                counter = counter + 1;
+                
+                % If enough correct positions recorded, break the for loop.
+                if counter > Constants.PositionCount
+                    t_finish = t;
+                    center_location_finish = centerLoc;
+                    break
+                end
+                continue
             end
         end
+        continue
     end
     
+    % Direction vector calculation.
+    velocityVector = velocity_calculate(PosArray,TimeArray,Constants);
+    
+    % Streaming the prediction of welding position.
+    for idx = 1 : 250
+       [~, ~, color_img] = next_frame(pipe,...
+            colorizer, alignedFs);
+        t = toc;
+        prediticted_frame = get_PredictVidFrame...
+            (color_img, velocityVector, weldingAverageArray, t_finish,...
+            center_location_finish, t, Constants);
+        videoPlayer(prediticted_frame)
+    end
     
     % Release Devices
     pipe.stop();
