@@ -1,9 +1,9 @@
-function [Ishape,centroid,depth_uint8, bbox] = foregrndDetection(depth_img,background,blobAnalysis,color_img)
+function [img_w_obj,centroid,depth_uint8, bbox] = foregrndDetection(depth_img,background,blobAnalysis,color_img)
 	% foregrndDetection - detecte the foreground of captured frame
 	% 	using the depth image.
     %
     % Syntax:  
-	%		[Ishape,centroid,depth_uint8, bbox] = foregrndDetection(depth_img,background,blobAnalysis,color_img)
+	%		[img_w_obj,centroid,depth_uint8, bbox] = foregrndDetection(depth_img,background,blobAnalysis,color_img)
 	%
 	% Inputs:
     %    depth_img - Depth image, 3-channel (RGB).
@@ -13,7 +13,7 @@ function [Ishape,centroid,depth_uint8, bbox] = foregrndDetection(depth_img,backg
 	%	 color_img - RGB image, 3-channel.
 	%
     % Outputs:
-    %    Ishape - RGB image, in which foreground is marked.
+    %    img_w_obj - RGB image, in which foreground is marked.
     %    centroid - The center pixel location of the ROI or foreground.
 	%    depth_uint8 - The depth image, which is converted to binary 
 	%					image.
@@ -26,24 +26,29 @@ function [Ishape,centroid,depth_uint8, bbox] = foregrndDetection(depth_img,backg
     % email: chijiang.duan@tu-braunschweig.de
     % Mar 2019; Version 1.0.0
     %------------- BEGIN CODE --------------
-	Ishape = [];
-	% konvertierung des Tiefenbildes in einem Binärbild mit Datentyp uint8
+	
+	% Image with target object marked out.
+	img_w_obj = [];
+	% Convert depth image into binary image with data type uint8.
 	depth_uint8 = depth_image_binarize(depth_img, 220); 
-	%Kleine Objekte entfernen, (Alle Objekte unter 200 Pixel)
+	% Morphological opening, get rid of small size noices.
 	depth_uint8 = bwareaopen(depth_uint8,200);
-	% Vordergrund extrahieren
+	
+	% Extract foreground.
 	foreground = depth_uint8 > background;
+	% Get rid of "post-processed" noices.
 	foreground = bwareaopen(foreground,10);
+	% Close segments into one piece.
 	se = strel('disk',10);
 	foreground = imclose(foreground, se);
-	% blobAnalyse auf Vordergrund anwenden  
+	
+	% Apply blobAnalyse to foreground.
 	[~,centroid,bbox] = step(blobAnalysis,foreground);
-	% Gefundene Objekte Markieren 
-	%       scale2 = size(crop_color,1)/size(depth_uint8,1); 
-	%       scale1 = size(crop_color,2)/size(depth_uint8,2); 
-	if isempty(bbox) == 0
-	%           bbox_color = [round(bbox(1)*scale1),round(bbox(2)*scale2),round(bbox(3)*scale1),round(bbox(4)*scale2)];
-		Ishape = insertShape(color_img,'rectangle',bbox,'Color',...
+	
+	% If the foreground has been detected, mark the region
+	% out on the RGB image.
+	if ~isempty(bbox)
+		img_w_obj = insertShape(color_img,'rectangle',bbox,'Color',...
 			'green','Linewidth',6); 
 	end
 	%------------- END OF CODE --------------

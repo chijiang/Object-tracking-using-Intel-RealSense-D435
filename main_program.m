@@ -16,15 +16,15 @@ function [output1,output2] = main_program()
     %    output1 - Description
     %    output2 - Description
     %
-    % Other m-files required: 	CameraCoorToRGB.m
+    % Other m-files required: 	rgb2camCoor.m
 	%							create_VideoFrame.m
-	%							DetectCircles.m 
+	%							findBinMarkers.m 
 	%							foregrndDetection.m 
-	%							get_GlobalPos.m 
-	%							get_ObjectPosition.m
-	%							get_PointCloud.m 
-	%							getFrame_Realsense.m 
-	%							ICP_Classification.m 
+	%							global_position.m 
+	%							object_position.m
+	%							calculate_ptCloud.m 
+	%							next_frame.m 
+	%							icp_Classification.m 
     % Subfunctions: none
     % MAT-files required: Constants_1.mat  Referenzdatenbank9_2.mat
     %
@@ -72,11 +72,11 @@ function [output1,output2] = main_program()
     videoPlayer = vision.VideoPlayer();
     
     % Time vector, necessary for the calculation of the direction vector 
-    TimeArray = zeros(Constants.PositionCount,1);
+    time_vector = zeros(Constants.PositionCount,1);
     
     % Position vector of the workpiece carrier at the times 
-    % stored in the TimeArray
-    PosArray = zeros(Constants.PositionCount,3);
+    % stored in the time_vector
+    pos_vector = zeros(Constants.PositionCount,3);
     
     
     objectID = [];  % For object recognition
@@ -103,14 +103,14 @@ function [output1,output2] = main_program()
             colorizer, alignedFs);
         
         % When the frames were created is cached, if the frame is used to 
-        % position the workpiece carrier, the time in "TimeArray" is 
+        % position the workpiece carrier, the time in time_vector is 
         % overwritten.
         t = toc;
         
         % Foreground detector, which isolates the workpiece carrier from 
         % the background, outputs among other things the pixel area of the 
         % workpiece carrier.
-        [Ishape,centroid,depth_uint8, bbox] = foregrndDetection(...
+        [img_w_obj,centroid,depth_uint8, bbox] = foregrndDetection(...
             depth_img,Constants.background,blobAnalysis,color_img);
         
         % If the workpiece carrier can be isolated, the program sequence
@@ -140,24 +140,24 @@ function [output1,output2] = main_program()
             % Make sure all binary markers have been detected. If not, 
             % the program starts again from the beginning.
             if size(centersBright,1) ==3
-                [Alpha,centerLoc] = global_position(...
+                [alpha,centerLoc] = global_position(...
                 centersBright,crop_color,crop_depth,Constants);
                 % Record the time into the time vector.
-                TimeArray(counter) = t;
+                time_vector(counter) = t;
                 % Record the position into the position vector.
-                PosArray(counter,:) = centerLoc;
+                pos_vector(counter,:) = centerLoc;
 
                 % Calculate the coordinate of the welding point.
-                weldingPos = object_position(ptCloud,...
-                Referenzdatenbank,objectID,Constants);
+                welding_pos = object_position(ptCloud,...
+					Referenzdatenbank,objectID,Constants);
 
                 % Visulizing the result.
-                videoFrame = create_VideoFrame(Ishape,WeldingPos,Constants);
+                videoFrame = create_VideoFrame(img_w_obj,welding_pos,Constants);
                 videoPlayer(videoFrame);
 
                 % The vector from the center location of the workpiece
                 % pointing to the welding position.
-                weldingVector = weldingPos-centerLoc;
+                weldingVector = welding_pos-centerLoc;
 
                 % Calculation of the average moving direction of the
                 % welding position.
@@ -172,7 +172,7 @@ function [output1,output2] = main_program()
                 
                 % If enough correct positions recorded, break the for loop.
                 if counter > Constants.PositionCount
-                    t_finish = t;
+                    finish_time = t;
                     center_location_finish = centerLoc;
                     break
                 end
@@ -183,7 +183,7 @@ function [output1,output2] = main_program()
     end
     
     % Direction vector calculation.
-    velocityVector = velocity_calculate(PosArray,TimeArray,Constants);
+    velocityVector = velocity_calculate(pos_vector,time_vector,Constants);
     
     % Streaming the prediction of welding position.
     for idx = 1 : 250
@@ -191,7 +191,7 @@ function [output1,output2] = main_program()
             colorizer, alignedFs);
         t = toc;
         prediticted_frame = get_PredictVidFrame...
-            (color_img, velocityVector, weldingAverageArray, t_finish,...
+            (color_img, velocityVector, weldingAverageArray, finish_time,...
             center_location_finish, t, Constants);
         videoPlayer(prediticted_frame)
     end
