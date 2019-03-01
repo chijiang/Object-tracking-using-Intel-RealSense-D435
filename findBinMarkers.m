@@ -1,4 +1,4 @@
-function centersBright = DetectCircles (bbox_color, color_img)
+function centersBright = findBinMarkers(bbox_color, color_img)
     BinaryMatrix = [];
     centersBright = []; 
     radiiBright = [];

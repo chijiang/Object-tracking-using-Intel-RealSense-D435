@@ -1,4 +1,4 @@
-function [Alpha,CenterLoc] = get_GlobalPos (centersBright,crop_color,depth,Constants)
+function [Alpha,CenterLoc] = global_position(centersBright,crop_color,depth,Constants)
 crop_color = rgb2gray(crop_color);
 for idx = 1 : 3 
     ID1 = imbinarize(crop_color(round(centersBright(idx,2)-19),round(centersBright(idx,1)),:));

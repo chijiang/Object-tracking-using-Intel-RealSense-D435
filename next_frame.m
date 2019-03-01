@@ -1,5 +1,5 @@
-function [depth, depth_img, color_img] = getFrame_Realsense(pipe, colorizer, alignedFs)
-    % getFrame_Realsense - the main function to capture one frame from 
+function [depth, depth_img, color_img] = next_frame(pipe, colorizer, alignedFs)
+    % next_frame - the main function to capture one frame from 
 	% 	the Intel® RealSense™ D435 camera. 
     %
     % Syntax:  

@@ -1,4 +1,4 @@
-function WeldingPos = get_ObjectPosition(ptCloud,Referenzdatenbank,ObjectID,Constants)
+function WeldingPos = object_position(ptCloud,Referenzdatenbank,ObjectID,Constants)
     FieldNames = fieldnames(Referenzdatenbank);
     Center = Referenzdatenbank.(FieldNames{ObjectID}).Center;
     ReferencePtCloud = Referenzdatenbank.(FieldNames{ObjectID}).ptCloud;

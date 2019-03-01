@@ -1,4 +1,4 @@
-function ptCloud = get_PointCloud(depth, centroid, bbox, pointcloud)   
+function ptCloud = calculate_ptCloud(depth, centroid, bbox, pointcloud)   
     if size(centroid, 1) == 1
         points = pointcloud.calculate(depth);
         vertices = points.get_vertices();

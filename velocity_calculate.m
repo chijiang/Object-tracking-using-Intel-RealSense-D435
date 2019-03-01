@@ -1,4 +1,4 @@
-function VelocityVector = get_movement(PosArray,TimeArray,Constants)
+function VelocityVector = velocity_calculate(PosArray,TimeArray,Constants)
      PosDiffArray = zeros(Constants.PositionCount-1,3); 
      TimeDiffArray = zeros(Constants.PositionCount-1,1); 
      VelocityArray = zeros(Constants.PositionCount-1,3); 

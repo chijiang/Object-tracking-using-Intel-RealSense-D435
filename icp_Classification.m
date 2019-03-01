@@ -1,4 +1,4 @@
-function [errValue, ObjectID ] = ICP_Classification(ptCloud,Referenzdatenbank,Constants)
+function [errValue, ObjectID] = icp_Classification(ptCloud,Referenzdatenbank,Constants)
     FieldNames = fieldnames(Referenzdatenbank);
     errValueArray = zeros(numel(FieldNames),1);
 
