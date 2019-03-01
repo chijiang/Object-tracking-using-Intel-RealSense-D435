@@ -8,7 +8,7 @@ function [img_w_obj,centroid,depth_uint8, bbox] = foregrndDetection(depth_img,ba
 	% Inputs:
     %    depth_img - Depth image, 3-channel (RGB).
     %    background - Depth image of the background, converted to
-	%					binary image (data type: bool). 
+	%					binary image (data type: uint8). 
 	%	 blobAnalysis - vision.BlobAnalysis object.
 	%	 color_img - RGB image, 3-channel.
 	%
