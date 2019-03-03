@@ -1,33 +1,55 @@
-function [Alpha,CenterLoc] = global_position(centersBright,crop_color,depth,Constants)
-crop_color = rgb2gray(crop_color);
-for idx = 1 : 3 
-    ID1 = imbinarize(crop_color(round(centersBright(idx,2)-19),round(centersBright(idx,1)),:));
-    ID2 = imbinarize(crop_color(round(centersBright(idx,2)+14),round((centersBright(idx,1)+14)),:));
-    ID3 = imbinarize(crop_color(round(centersBright(idx,2)+14),round((centersBright(idx,1)-14)),:));
+function [alpha,center_loc] = global_position(centersBright,color_img,depth,Constants)
+    % global_position - Calculating the global position of the center point
+    %       of the target workpiece.
+    %
+    % Syntax:  
+	%	[Alpha,CenterLoc] = global_position(centersBright,crop_color,depth,Constants)
+	%
+	% Inputs:
+    %	 centersBright - The center point positions of the markers in
+    %       image.
+	%	 color_img - The RGB image captured by the camera.
+    %    depth - The realsense.depth_frame object.
+    %    Constants - The structure contains all global variables for the
+    %       program.
+	%
+    % Outputs:
+    %    alpha - The angle between the image frame and the global frame.
+    %    center_loc - The center location of the workpiece.
+    %
+    % Author: Chijiang Duan
+    % email: chijiang.duan@tu-braunschweig.de
+    % Mar 2019; Version 1.0.0
+    %------------- BEGIN CODE --------------
     
-    if ID1 == 1 && ID2 == 1 && ID3 == 1 
-        P2 = zeros(1,2); 
-        P2(1) = centersBright(idx,1); 
-        P2(2) = centersBright(idx,2); 
-    elseif ID1 == 0 && ID2 == 0 && ID3 == 0 
-        P3 = zeros(1,2);
-        P3(1) = centersBright(idx,1); 
-        P3(2) = centersBright(idx,2); 
-    else
-        P1 = zeros(1,2); 
-        P1(1) = centersBright(idx,1); 
-        P1(2) = centersBright(idx,2);
-    end 
-end
+    color_img = rgb2gray(color_img);
+    for idx = 1 : 3 
+        upper = imbinarize(color_img(round(centersBright(idx,2)-19),round(centersBright(idx,1)),:));
+        lower_right = imbinarize(color_img(round(centersBright(idx,2)+14),round((centersBright(idx,1)+14)),:));
+        lower_left = imbinarize(color_img(round(centersBright(idx,2)+14),round((centersBright(idx,1)-14)),:));
 
-  XYZP1 = RGBToCameraCoor(depth,P1(2),P1(1));
-  XYZP2 = RGBToCameraCoor(depth,P2(2),P2(1));
-  XYZP3 = RGBToCameraCoor(depth,P3(2),P3(1));
-  
-  VP3P2 = XYZP3 - XYZP2;
-  VP1P2 = XYZP1 - XYZP2;
-  
-  CenterLoc = [XYZP2 + (VP3P2/2) + (VP1P2/2)];
-%   CenterLoc = [(XYZP3(1,1)-XYZP1(1,1))/2+XYZP1(1,1);(XYZP3(1,2)-XYZP1(1,2))/2+XYZP1(1,2);(XYZP3(1,3)-XYZP1(1,3))/2+XYZP1(1,3)];
-  Alpha = atan2d(norm(cross(VP3P2,Constants.LinearAxisDirection)),dot(VP3P2,Constants.LinearAxisDirection));
+        if upper == 1 && lower_right == 1 && lower_left == 1 
+            p2 = zeros(1,2); 
+            p2(1) = centersBright(idx,1); 
+            p2(2) = centersBright(idx,2); 
+        elseif upper == 0 && lower_right == 0 && lower_left == 0 
+            p3 = zeros(1,2);
+            p3(1) = centersBright(idx,1); 
+            p3(2) = centersBright(idx,2); 
+        else
+            p1 = zeros(1,2); 
+            p1(1) = centersBright(idx,1); 
+            p1(2) = centersBright(idx,2);
+        end 
+    end
+
+    coor_p1 = rgb2camCoor(depth,p1(2),p1(1));
+    coor_p2 = rgb2camCoor(depth,p2(2),p2(1));
+    coor_p3 = rgb2camCoor(depth,p3(2),p3(1));
+
+    p2p3 = coor_p3 - coor_p2;
+    p2p1 = coor_p1 - coor_p2;
+
+    center_loc = [coor_p2 + (p2p3/2) + (p2p1/2)];
+    alpha = atan2d(norm(cross(p2p3,Constants.LinearAxisDirection)),dot(p2p3,Constants.LinearAxisDirection));
 end
