@@ -14,7 +14,7 @@ function [alpha,center_loc] = global_position(centersBright,color_img,depth,Cons
     %       program.
 	%
     % Outputs:
-    %    alpha - The angle between the image frame and the global frame.
+    %    alpha - The angle between the workpiece frame and the camera frame.
     %    center_loc - The center location of the workpiece.
     %
     % Author: Chijiang Duan
@@ -22,12 +22,15 @@ function [alpha,center_loc] = global_position(centersBright,color_img,depth,Cons
     % Mar 2019; Version 1.0.0
     %------------- BEGIN CODE --------------
     
+    % Convert color image to gray scale.
     color_img = rgb2gray(color_img);
     for idx = 1 : 3 
+        % Find the color of the upper, lower right, lower left corner of
+        % the marker.
         upper = imbinarize(color_img(round(centersBright(idx,2)-19),round(centersBright(idx,1)),:));
         lower_right = imbinarize(color_img(round(centersBright(idx,2)+14),round((centersBright(idx,1)+14)),:));
         lower_left = imbinarize(color_img(round(centersBright(idx,2)+14),round((centersBright(idx,1)-14)),:));
-
+        % Determin the correct position of marker.
         if upper == 1 && lower_right == 1 && lower_left == 1 
             p2 = zeros(1,2); 
             p2(1) = centersBright(idx,1); 
@@ -42,14 +45,20 @@ function [alpha,center_loc] = global_position(centersBright,color_img,depth,Cons
             p1(2) = centersBright(idx,2);
         end 
     end
-
+    
+    % Calculate the coordiante of the markers according to the camera
+    % frame.
     coor_p1 = rgb2camCoor(depth,p1(2),p1(1));
     coor_p2 = rgb2camCoor(depth,p2(2),p2(1));
     coor_p3 = rgb2camCoor(depth,p3(2),p3(1));
-
+    
+    % Calculate the coordinate of the center position of the workpiece
+    % according to the camera frame.
     p2p3 = coor_p3 - coor_p2;
     p2p1 = coor_p1 - coor_p2;
-
     center_loc = [coor_p2 + (p2p3/2) + (p2p1/2)];
-    alpha = atan2d(norm(cross(p2p3,Constants.LinearAxisDirection)),dot(p2p3,Constants.LinearAxisDirection));
+    
+    % Calculate the angle between the workpiece frame and the camera frame.
+    alpha = atan2d(norm(cross(p2p3,Constants.LinearAxisDirection)),...
+        dot(p2p3,Constants.LinearAxisDirection));
 end
