@@ -1,4 +1,4 @@
-function [output1,output2] = main_program()
+function [pos_vector,velocityVector] = main_program()
     % main_program - the main function to activate the Intel® RealSense™
     % 	D435 camera for the use of "Dynamisierte Fertigungsketten". This 
     % 	program needs to be used with Intel® RealSense™ SDK 2.0 and its
@@ -39,7 +39,7 @@ function [output1,output2] = main_program()
     config.enable_stream(realsense.stream.depth,...
 		1280, 720, realsense.format.z16, 30)
     config.enable_stream(realsense.stream.color,...
-		1280, 720, realsense.format.rgb8, 30)
+		1920, 1080, realsense.format.rgb8, 30)
     
     % Initialize a pointcloud object to calculate the point cloud of target
     % workpiece.
@@ -61,7 +61,7 @@ function [output1,output2] = main_program()
     
     % Creating a BlobAnalysis object for foreground detecting.
     blobAnalysis = vision.BlobAnalysis('MinimumBlobArea',32000,...
-        'MaximumBlobArea',100000);
+        'MaximumBlobArea',1000000);
     
     % Loading the necessary data.
     load('Constants_1','-mat'); % Constants and parameters
@@ -111,7 +111,7 @@ function [output1,output2] = main_program()
         % the background, outputs among other things the pixel area of the 
         % workpiece carrier.
         [img_w_obj,centroid,depth_uint8, bbox] = foregrndDetection(...
-            depth_img,Constants.background,blobAnalysis,color_img);
+            depth_img,Constants.Background,blobAnalysis,color_img);
         
         % If the workpiece carrier can be isolated, the program sequence
         % will continue unless new frames are created and the program 
@@ -124,7 +124,7 @@ function [output1,output2] = main_program()
             % different types of the workpieces are stored in the reference
             % databank, which will be used for comparison with the ICP
             % algorithms.
-            if isempty(objectID)
+            if isempty(objectID) && ~isempty(ptCloud)
                 [errValue, objectID] = icp_Classification(...
                     ptCloud,Referenzdatenbank,Constants);
                 % If the error is greater than a threshold, the
@@ -136,12 +136,12 @@ function [output1,output2] = main_program()
                 end
             end
             % Detecting the Binary markers.
-            centersBright = findBinMarkers(bbox_color, color_img);
+            centersBright = findBinMarkers(bbox, color_img);
             % Make sure all binary markers have been detected. If not, 
             % the program starts again from the beginning.
             if size(centersBright,1) ==3
                 [alpha,centerLoc] = global_position(...
-                centersBright,crop_color,crop_depth,Constants);
+                centersBright,color_img,depth_img,Constants);
                 % Record the time into the time vector.
                 time_vector(counter) = t;
                 % Record the position into the position vector.

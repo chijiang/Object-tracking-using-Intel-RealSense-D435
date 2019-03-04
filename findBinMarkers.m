@@ -19,15 +19,15 @@ function centersBright = findBinMarkers(bbox, color_img)
     % Crop the ROI out of the RGB image.
     roi = imcrop(color_img, bbox);
     % Convert the ROI image into a binary image.
-    roi_bin = imbinarize(rgb2gray(roi),0.6);
+    roi_bin = imbinarize(rgb2gray(roi));
     % Finding edge using sobel filter.
     enhanced_roi = edge(roi_bin,'sobel');
     % Dilate the image.
     se = strel('disk',1);
     bw = imdilate(enhanced_roi, se);
     % Finding the circles in image fits the radius of the markers.
-    [centers,~,~] = imfindcircles(bw,[8,10],...
-        'ObjectPolarity','bright','Method','TwoStage', 'Sensitivity', 0.8);
+    [centers,rad,~] = imfindcircles(bw,[8,9],...
+        'ObjectPolarity','bright','Method','TwoStage', 'Sensitivity', 0.86);
     % Calculating the position of the marker center point in the whole
     % RGB image.
     centers(:,1) = centers(:,1) + double(bbox(1,1));

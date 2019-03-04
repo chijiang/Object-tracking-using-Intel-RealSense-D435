@@ -16,8 +16,8 @@ function depth_uint8 = depth_image_binarize(depth_img, threshold)
     % email: chijiang.duan@tu-braunschweig.de
     % Mar 2019; Version 1.0.0
     %------------- BEGIN CODE --------------
-	depth_uint8 = rgb2gray(crop_depth);
+	depth_uint8 = rgb2gray(depth_img);
     depth_uint8 = depth_uint8 > threshold;
-	depth_uint8 = cast(depth_img, 'uint8')
+	depth_uint8 = cast(depth_uint8, 'uint8')*255;
 	%------------- END OF CODE --------------
 end 

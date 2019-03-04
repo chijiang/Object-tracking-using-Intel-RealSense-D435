@@ -37,56 +37,55 @@ function [errValue, objectID] = icp_Classification(ptCloud,Referenzdatenbank,Con
         % Read the center position of the standard model.
         center = Referenzdatenbank.(workpieces{idx}).Center;
         % Assign the reference point cloud.
-        reference_PtCloud = Referenzdatenbank.(workpieces{idx}).ptCloud;
+        reference_ptCloud = Referenzdatenbank.(workpieces{idx}).ptCloud;
         
-        % Rotation matrix along x axis.
+        % The rotation matrix along the x axis.
         rotx = [1, 0, 0, 0;...
-                0, cos(pi), -sin(pi), 0; ...
-                0, sin(pi), cos(pi), 0; ...
+                0, cos(pi), -sin(pi), 0;...
+                0, sin(pi), cos(pi), 0;...
                 0, 0, 0, 1];
-        % Rotation matrix along z axis.
-        rotz = [cos(-pi/2), -sin(-pi/2), 0, 0; ...
-                sin(-pi/2), cos(-pi/2), 0, 0; ...
-                0, 0, 1, 0; ...
+        % The rotation matrix along the z axis.
+        rotz = [cos(-pi/2), -sin(-pi/2), 0, 0;...
+                sin(-pi/2), cos(-pi/2), 0, 0;...
+                0, 0, 1, 0;...
                 0, 0, 0, 1];
-        % Total rotation.
+        % The rotation matrix for the total rotation.
         rotation = (rotx*rotz)';
-        % Perform the rotation to the point cloud.
-        t_trans = affine3d(rotation);
-        ptCloud_resize = pctransform(ptCloud,t_trans); 
-        
+        % Perform the rotation to the refernce point cloud.
+        t_rot = affine3d(rotation);
+        reference_ptCloud = pctransform(reference_ptCloud,t_rot); 
+
         % Scale transformation of x coordinates.
-        x_size = (ptCloud_resize.XLimits(1,2) - ptCloud_resize.XLimits(1,1)) / ...
-            (reference_PtCloud.XLimits(1,2) - reference_PtCloud.XLimits(1,1));
+        x_scale = (ptCloud.XLimits(1,2) - ptCloud.XLimits(1,1)) \ ...
+            (reference_ptCloud.XLimits(1,2) - reference_ptCloud.XLimits(1,1));
         % Scale transformation of y coordinates.
-        y_size = (ptCloud_resize.YLimits(1,2) - ptCloud_resize.YLimits(1,1)) / ...
-            (reference_PtCloud.YLimits(1,2) - reference_PtCloud.YLimits(1,1));
+        y_scale = (ptCloud.YLimits(1,2) - ptCloud.YLimits(1,1)) \ ...
+            (reference_ptCloud.YLimits(1,2) - reference_ptCloud.YLimits(1,1));
         % Scale transformation of z coordinates.
-        z_size = (ptCloud_resize.ZLimits(1,2) - ptCloud_resize.ZLimits(1,1)) / ...
-            (reference_PtCloud.ZLimits(1,2) - reference_PtCloud.ZLimits(1,1));
-        % The scale transformation matrix.
-        trans = [1/x_size,0,0,0;0,1/y_size,0,0;0,0,1/z_size,0;0,0,0,1];
-        % Perform the scale transformation to the point cloud.
-        t_trans = affine3d(trans);
-        ptCloud_resize = pctransform(ptCloud_resize,t_trans); 
-        
-        % Find the offset of two centers in x axis.
-        x_diff = ((ptCloud_resize.XLimits(1,2)-ptCloud_resize.XLimits(1,1))/2)+...
-                ptCloud_resize.XLimits(1,1)-center(1,1);
-        % Find the offset of two centers in y axis.
-        y_diff = ((ptCloud_resize.YLimits(1,2)-ptCloud_resize.YLimits(1,1))/2)+...
-                ptCloud_resize.YLimits(1,1)-center(1,2);
-        % Find the offset of two centers in z axis.
-        z_diff = ((ptCloud_resize.ZLimits(1,2)-ptCloud_resize.ZLimits(1,1))/2)+...
-                ptCloud_resize.ZLimits(1,1)-center(1,3);
+        z_scale = (ptCloud.ZLimits(1,2) - ptCloud.ZLimits(1,1)) \ ...
+            (reference_ptCloud.ZLimits(1,2) - reference_ptCloud.ZLimits(1,1));
+        % Scale transformation matrix.
+        trans = [1/x_scale,0,0,0;0,1/y_scale,0,0;0,0,1/z_scale,0;0,0,0,1];
+        % Perform the scale transformation to the refernce point cloud.
+        t_resize = affine3d(trans);
+        reference_ptCloud = pctransform(reference_ptCloud,t_resize); 
+
+        % The center offset in x axis.
+        x_diff = ((ptCloud.XLimits(1,2)-ptCloud.XLimits(1,1))/2)+ptCloud.XLimits(1,1)-...
+            (((reference_ptCloud.XLimits(1,2)-reference_ptCloud.XLimits(1,1))/2)+reference_ptCloud.XLimits(1,1));
+        % The center offset in y axis.
+        y_diff = ((ptCloud.YLimits(1,2)-ptCloud.YLimits(1,1))/2)+ptCloud.YLimits(1,1)-...
+            (((reference_ptCloud.YLimits(1,2)-reference_ptCloud.YLimits(1,1))/2)+reference_ptCloud.YLimits(1,1));
+        % The center offset in z axis.
+        z_diff = ((ptCloud.ZLimits(1,2)-ptCloud.ZLimits(1,1))/2)+ptCloud.ZLimits(1,1)-...
+            (((reference_ptCloud.ZLimits(1,2)-reference_ptCloud.ZLimits(1,1))/2)+reference_ptCloud.ZLimits(1,1));
         % Perform the translation to the reference point cloud.
         t_trans = affine3d([1,0,0,0;0,1,0,0;0,0,1,0;x_diff,y_diff,z_diff,1]);
-        reference_PtCloud = pctransform(reference_PtCloud,t_trans); 
+        reference_ptCloud = pctransform(reference_ptCloud,t_trans);
         
         % Perform the icp algorithms to find the root mean squared error.
-        [~,~,rmse] = pcregistericp(reference_PtCloud,ptCloud_resize,...
-            'MaxIterations',Constants.ICP_Parameters.ICP_Classi_iter,...
-            'metric','pointToPlane');
+        [~,~,rmse] = pcregistericp(reference_ptCloud,ptCloud,'MaxIterations',...
+        Constants.ICP_Parameters.ICP_Pos_iter,'metric','pointToPlane');
         errValueArray(idx) = rmse;
     end
     

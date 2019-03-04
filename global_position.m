@@ -23,26 +23,26 @@ function [alpha,center_loc] = global_position(centersBright,color_img,depth,Cons
     %------------- BEGIN CODE --------------
     
     % Convert color image to gray scale.
-    color_img = rgb2gray(color_img);
+    img = rgb2gray(color_img);
     for idx = 1 : 3 
         % Find the color of the upper, lower right, lower left corner of
         % the marker.
-        upper = imbinarize(color_img(round(centersBright(idx,2)-19),round(centersBright(idx,1)),:));
-        lower_right = imbinarize(color_img(round(centersBright(idx,2)+14),round((centersBright(idx,1)+14)),:));
-        lower_left = imbinarize(color_img(round(centersBright(idx,2)+14),round((centersBright(idx,1)-14)),:));
+        upper = imbinarize(img(round(centersBright(idx,2)-19),round(centersBright(idx,1)),:));
+        lower_right = imbinarize(img(round(centersBright(idx,2)+14),round((centersBright(idx,1)+14)),:));
+        lower_left = imbinarize(img(round(centersBright(idx,2)+14),round((centersBright(idx,1)-14)),:));
         % Determin the correct position of marker.
         if upper == 1 && lower_right == 1 && lower_left == 1 
             p2 = zeros(1,2); 
-            p2(1) = centersBright(idx,1); 
-            p2(2) = centersBright(idx,2); 
+            p2(1) = round(centersBright(idx,1)); 
+            p2(2) = round(centersBright(idx,2)); 
         elseif upper == 0 && lower_right == 0 && lower_left == 0 
             p3 = zeros(1,2);
-            p3(1) = centersBright(idx,1); 
-            p3(2) = centersBright(idx,2); 
+            p3(1) = round(centersBright(idx,1)); 
+            p3(2) = round(centersBright(idx,2)); 
         else
             p1 = zeros(1,2); 
-            p1(1) = centersBright(idx,1); 
-            p1(2) = centersBright(idx,2);
+            p1(1) = round(centersBright(idx,1)); 
+            p1(2) = round(centersBright(idx,2));
         end 
     end
     
