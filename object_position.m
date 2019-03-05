@@ -1,14 +1,14 @@
-function weldingPos = object_position(ptCloud,Referenzdatenbank,ObjectID,Constants)
+function weldingPos = object_position(ptCloud,Referenzdatenbank,objectID,Constants)
     % object_position - Calculate the object position of the welding point.
     %
     % Syntax:  
-	%	 weldingPos = object_position(ptCloud,Referenzdatenbank,ObjectID,Constants)
+	%	 weldingPos = object_position(ptCloud,Referenzdatenbank,objectID,Constants)
 	%
 	% Inputs:
     %    ptCloud - The taken point cloud of the workpiece.
     %    Referenzdatenbank - The reference data bank, which contains the
     %           point cloud of the standard models.
-	%	 ObjectID - Integer, the recognized ID of the workpiece.
+	%	 objectID - Integer, the recognized ID of the workpiece.
 	%	 Constants - Constants with the glaobal constants for program.
 	%
     % Outputs:
@@ -21,7 +21,7 @@ function weldingPos = object_position(ptCloud,Referenzdatenbank,ObjectID,Constan
     
     % Assign the standard point cloud to the reference point cloud.
     workpieces = fieldnames(Referenzdatenbank);
-    reference_ptCloud = Referenzdatenbank.(workpieces{ObjectID}).ptCloud;
+    reference_ptCloud = Referenzdatenbank.(workpieces{objectID}).ptCloud;
     
     % The rotation matrix along the x axis.
     rotx = [1, 0, 0, 0;...
@@ -73,7 +73,7 @@ function weldingPos = object_position(ptCloud,Referenzdatenbank,ObjectID,Constan
         Constants.ICP_Parameters.ICP_Pos_iter,'metric','pointToPlane');
 
     % Convert the welding position into a pointcloud.
-    welding_position = Referenzdatenbank.(workpieces{ObjectID}).WeldingPoints;
+    welding_position = Referenzdatenbank.(workpieces{objectID}).WeldingPoints;
     welding_position = pointCloud(welding_position); 
     % perform rotation, scale transformation, translation, icp
     % transformation on the welding position.
@@ -83,8 +83,8 @@ function weldingPos = object_position(ptCloud,Referenzdatenbank,ObjectID,Constan
     welding_position = pctransform(welding_position,t_ICP);
     
     % Covert the point cloud to position array.
-    weldingPos(:,1) = welding_position.Location(:,2);
-    weldingPos(:,2) = welding_position.Location(:,1);
+    weldingPos(:,1) = welding_position.Location(:,1);
+    weldingPos(:,2) = welding_position.Location(:,2);
     weldingPos(:,3) = welding_position.Location(:,3);
     
     %------------- END OF CODE --------------

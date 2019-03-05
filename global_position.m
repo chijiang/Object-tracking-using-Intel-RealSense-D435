@@ -48,15 +48,15 @@ function [alpha,center_loc] = global_position(centersBright,color_img,depth,Cons
     
     % Calculate the coordiante of the markers according to the camera
     % frame.
-    coor_p1 = rgb2camCoor(depth,p1(2),p1(1));
-    coor_p2 = rgb2camCoor(depth,p2(2),p2(1));
-    coor_p3 = rgb2camCoor(depth,p3(2),p3(1));
+    coor_p1 = rgb2camCoor(depth,p1(1),p1(2));
+    coor_p2 = rgb2camCoor(depth,p2(1),p2(2));
+    coor_p3 = rgb2camCoor(depth,p3(1),p3(2));
     
     % Calculate the coordinate of the center position of the workpiece
     % according to the camera frame.
     p2p3 = coor_p3 - coor_p2;
     p2p1 = coor_p1 - coor_p2;
-    center_loc = [coor_p2 + (p2p3/2) + (p2p1/2)];
+    center_loc = coor_p2 + (p2p3 + p2p1)/2;
     
     % Calculate the angle between the workpiece frame and the camera frame.
     alpha = atan2d(norm(cross(p2p3,Constants.LinearAxisDirection)),...

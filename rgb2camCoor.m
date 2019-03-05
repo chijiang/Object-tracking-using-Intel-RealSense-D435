@@ -24,8 +24,8 @@ function position_cam = rgb2camCoor(depth,pixel_x,pixel_y)
     
     % Calculate the x and y according to the size of the picture, the
     % height z and the view angle of the camera.
-    y = (pixel_x - 640) * z/(1280/(2 * tan(69.4/180*pi/2)));
-    x = (360 - pixel_y) * z/(720/(2 * tan(42.5/180*pi/2)));
+    x = (pixel_x - 640) * z/(1280/(2 * tan(69.4/180*pi/2)));
+    y = -(360 - pixel_y) * z/(720/(2 * tan(42.5/180*pi/2)));
     % Position in camera frame.
     position_cam = [x, y, z];
     

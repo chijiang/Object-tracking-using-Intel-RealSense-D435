@@ -149,7 +149,7 @@ function [pos_vector,velocityVector] = main_program()
 
                 % Calculate the coordinate of the welding point.
                 welding_pos = object_position(ptCloud,...
-                    Referenzdatenbank,ObjectID,Constants);
+                    Referenzdatenbank,objectID,Constants);
 
                 % Visulizing the result.
                 videoFrame = create_VideoFrame(img_w_obj,welding_pos,Constants);
