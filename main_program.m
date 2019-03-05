@@ -140,16 +140,16 @@ function [pos_vector,velocityVector] = main_program()
             % Make sure all binary markers have been detected. If not, 
             % the program starts again from the beginning.
             if size(centersBright,1) ==3
-                [alpha,centerLoc] = global_position(...
-                centersBright,color_img,depth_img,Constants);
+                [alpha,center_loc] = global_position(...
+                    centersBright,color_img,depth,Constants);
                 % Record the time into the time vector.
                 time_vector(counter) = t;
                 % Record the position into the position vector.
-                pos_vector(counter,:) = centerLoc;
+                pos_vector(counter,:) = center_loc;
 
                 % Calculate the coordinate of the welding point.
                 welding_pos = object_position(ptCloud,...
-					Referenzdatenbank,objectID,Constants);
+                    Referenzdatenbank,ObjectID,Constants);
 
                 % Visulizing the result.
                 videoFrame = create_VideoFrame(img_w_obj,welding_pos,Constants);
@@ -157,7 +157,7 @@ function [pos_vector,velocityVector] = main_program()
 
                 % The vector from the center location of the workpiece
                 % pointing to the welding position.
-                weldingVector = welding_pos-centerLoc;
+                weldingVector = welding_pos-center_loc;
 
                 % Calculation of the average moving direction of the
                 % welding position.
@@ -173,7 +173,7 @@ function [pos_vector,velocityVector] = main_program()
                 % If enough correct positions recorded, break the for loop.
                 if counter > Constants.PositionCount
                     finish_time = t;
-                    center_location_finish = centerLoc;
+                    center_location_finish = center_loc;
                     break
                 end
                 continue

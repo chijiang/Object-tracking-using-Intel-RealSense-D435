@@ -1,12 +1,8 @@
-function [Pcx,Pcy] = camCoor2RGB(WeldingPos,Constants)
-Fdx = Constants.CameraParameters.Fdx; %367.286994
-Fdy = Constants.CameraParameters.Fdy; %367.286855
-Cdx = Constants.CameraParameters.Cdx; %255.16569
-Cdy = Constants.CameraParameters.Cdy; %211.82460
+function [pixel_x,pixel_y] = camCoor2RGB(welding_pos,Constants)
+x = welding_pos(1);
+y = welding_pos(2);
+z = welding_pos(3);
 
-Pdy = ((WeldingPos(1,2)*Fdy)/WeldingPos(1,3))+Cdy;
-Pdx = ((WeldingPos(1,1)*Fdx)/WeldingPos(1,3))+Cdx;
-
-Pcx = round(Pdx*2.9111); 
-Pcy = round(Pdy*2.9316);
+pixel_x = (x * 1280) / (2*tan(69.4/180*pi/2)) / z + 640;
+pixel_y = - ((x * 720) / (2*tan(42.5/180*pi/2)) / z - 360);
 end 
