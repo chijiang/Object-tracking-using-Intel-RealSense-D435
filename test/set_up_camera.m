@@ -1,9 +1,5 @@
 function set_up_camera()
-<<<<<<< HEAD
     cd ..
-=======
-	cd ..
->>>>>>> 11513ff1342aba597386ab6bceb126a5c84ac0a2
     pipe = realsense.pipeline();
     config = realsense.config();
     config.enable_stream(realsense.stream.depth,...
@@ -31,7 +27,6 @@ function set_up_camera()
     load('Constants_1.mat')
     
     for i = 1:6000
-<<<<<<< HEAD
         [depth, depth_img, color_img] = next_frame(pipe,...
             colorizer, alignedFs);
 %         play_color(color_img)
@@ -95,15 +90,6 @@ function set_up_camera()
             end
             continue
         end
-=======
-        [~, depth_img, color_img] = next_frame(pipe,...
-            colorizer, alignedFs);
-%         play_color(color_img)
-%         play_depth(depth_img)
-        play_foreground(depth_image_binarize(depth_img, 200))
-%         [img_w_obj,centroid,depth_uint8, bbox] = foregrndDetection(...
-%             depth_img,Constants.Background,blobAnalysis,color_img);
->>>>>>> 11513ff1342aba597386ab6bceb126a5c84ac0a2
 %         if ~isempty(img_w_obj)
 %             play_obj(img_w_obj)
 %         else
