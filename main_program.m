@@ -190,9 +190,11 @@ function [pos_vector,velocityVector] = main_program()
        [~, ~, color_img] = next_frame(pipe,...
             colorizer, alignedFs);
         t = toc;
-        prediticted_frame = get_PredictVidFrame...
+		% Calculate the frame with the predicted welding positions.
+        prediticted_frame = predicted_VidFrame...
             (color_img, velocityVector, weldingAverageArray, finish_time,...
-            center_location_finish, t, Constants);
+            center_location_finish, t);
+		% Show the video frame
         videoPlayer(prediticted_frame)
     end
     
