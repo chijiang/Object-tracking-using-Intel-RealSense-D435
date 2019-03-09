@@ -30,7 +30,7 @@ function [img_w_obj,centroid,depth_uint8, bbox] = foregrndDetection(depth_img,ba
 	% Image with target object marked out.
 	img_w_obj = [];
 	% Convert depth image into binary image with data type uint8.
-	depth_uint8 = depth_image_binarize(depth_img, 220); 
+	depth_uint8 = depth_image_binarize(depth_img, 200); 
 	% Morphological opening, get rid of small size noices.
 	depth_uint8 = bwareaopen(depth_uint8,200);
 	

@@ -1,4 +1,4 @@
-function [background, crop_color] = background_taker()
+function [background, color_img] = background_taker()
     pipe = realsense.pipeline();
     config = realsense.config();
     config.enable_stream(realsense.stream.depth, 1280, 720, realsense.format.z16, 30)
@@ -14,10 +14,11 @@ function [background, crop_color] = background_taker()
     
     videoplayer = vision.VideoPlayer();
     for i = 1:100
-        [depth, crop_depth, crop_color, resize_color] = getFrame_Realsense(pipe, colorizer, alignedFs);
+        [depth, depth_img, color_img] = next_frame(pipe,...
+            colorizer, alignedFs);
 %         crop_depth(crop_depth == 0) = 255;
 %         bi_depth = rgb2gray(crop_depth) > 180;
-        bi_depth = TiefenbildBinarisierung(crop_depth, 220);
+        bi_depth = depth_image_binarize(depth_img, 200);
 %         bi_depth = cast(bi_depth, 'uint8')*255;
 %         bi_depth = bwareaopen(bi_depth,2000);
         videoplayer(bi_depth)
