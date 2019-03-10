@@ -1,5 +1,5 @@
-function set_up_camera()
-    cd ..
+function set_up_camera(background)
+    cd 'C:\Users\chijiang\Desktop\Camera'
     pipe = realsense.pipeline();
     config = realsense.config();
     config.enable_stream(realsense.stream.depth,...
@@ -7,34 +7,31 @@ function set_up_camera()
     config.enable_stream(realsense.stream.color,...
 		1280, 720, realsense.format.rgb8, 30)
     
-    blobAnalysis = vision.BlobAnalysis('MinimumBlobArea',32000,...
-        'MaximumBlobArea',1000000);
+    blobAnalysis = vision.BlobAnalysis('MinimumBlobArea',15000,...
+        'MaximumBlobArea',80000);
     
     colorizer = realsense.colorizer(2);
     align_to = realsense.stream.color;
     alignedFs = realsense.align(align_to);
+    pointcloud = realsense.pointcloud();
     
     profile = pipe.start(config);
     
     depth_sensor = profile.get_device().first('depth_sensor');
     depth_sensor.set_option(realsense.option.visual_preset, 5);
     
-    play_color = vision.VideoPlayer();
-    play_depth = vision.VideoPlayer();
-    play_foreground = vision.VideoPlayer();
-    play_obj = vision.VideoPlayer();
+    videoplayer = vision.VideoPlayer();
     
     load('Constants_1.mat')
-    
+    load('Referenzdatenbank9_2.mat')
+    counter = 0;
+    objectID = [];
     for i = 1:6000
         [depth, depth_img, color_img] = next_frame(pipe,...
             colorizer, alignedFs);
-%         play_color(color_img)
-%         play_depth(depth_img)
-%         play_foreground(depth_image_binarize(depth_img, 200))
-        [img_w_obj,centroid,depth_uint8, bbox] = foregrndDetection(...
-            depth_img,Constants.Background,blobAnalysis,color_img);
-        if ~isempty(centroid)
+        
+        [img_w_obj,centroid,~, bbox] = foregrndDetection(depth_img,background,blobAnalysis,color_img);
+        if size(bbox, 1) == 1
             % Creating the point cloud of the workpiece.
             ptCloud = calculate_ptCloud(depth, centroid, bbox, pointcloud);
             % The point cloud is for the workpiece recognization and 
@@ -51,13 +48,15 @@ function set_up_camera()
                 if errValue > Constants.ConfidenceInterval
                    objectID = [];
                    continue
+                else
+                    sprintf('Detect obj: %d', objectID)
                 end
             end
 
             % Record the time into the time vector.
-            time_vector(counter) = t;
+%             time_vector(counter) = t;
             % Record the position into the position vector.
-            pos_vector(counter,:) = center_loc;
+%             pos_vector(counter,:) = center_loc;
 
             % Calculate the coordinate of the welding point.
             welding_pos = object_position(ptCloud,...
@@ -65,19 +64,19 @@ function set_up_camera()
 
             % Visulizing the result.
             videoFrame = create_VideoFrame(img_w_obj,welding_pos,Constants);
-            play_obj(videoFrame);
+            videoplayer(videoFrame);
 
-            % The vector from the center location of the workpiece
-            % pointing to the welding position.
-            weldingVector = welding_pos-center_loc;
-
-            % Calculation of the average moving direction of the
-            % welding position.
-            if counter == 1
-                weldingAverageArray = weldingVector;
-            elseif counter > 1
-                weldingAverageArray = (weldingVector + weldingAverageArray) / 2;
-            end
+%             % The vector from the center location of the workpiece
+%             % pointing to the welding position.
+%             weldingVector = welding_pos-center_loc;
+% 
+%             % Calculation of the average moving direction of the
+%             % welding position.
+%             if counter == 1
+%                 weldingAverageArray = weldingVector;
+%             elseif counter > 1
+%                 weldingAverageArray = (weldingVector + weldingAverageArray) / 2;
+%             end
 
             % If the detection succeeded, add one to the counter.
             counter = counter + 1;
@@ -89,12 +88,15 @@ function set_up_camera()
                 break
             end
             continue
+        else
+            videoplayer(color_img)
         end
-%         if ~isempty(img_w_obj)
-%             play_obj(img_w_obj)
+%         if size(bbox,1) == 1
+%             videoplayer(img_w_obj)
 %         else
-%             play_obj(color_img)
+%             videoplayer(color_img)
 %         end
     end
     pipe.stop()
+    cd 'test'
 end

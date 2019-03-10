@@ -56,16 +56,16 @@ function [errValue, objectID] = icp_Classification(ptCloud,Referenzdatenbank,Con
         reference_ptCloud = pctransform(reference_ptCloud,t_rot); 
 
         % Scale transformation of x coordinates.
-        x_scale = (ptCloud.XLimits(1,2) - ptCloud.XLimits(1,1)) \ ...
-            (reference_ptCloud.XLimits(1,2) - reference_ptCloud.XLimits(1,1));
-        % Scale transformation of y coordinates.
-        y_scale = (ptCloud.YLimits(1,2) - ptCloud.YLimits(1,1)) \ ...
-            (reference_ptCloud.YLimits(1,2) - reference_ptCloud.YLimits(1,1));
-        % Scale transformation of z coordinates.
-        z_scale = (ptCloud.ZLimits(1,2) - ptCloud.ZLimits(1,1)) \ ...
-            (reference_ptCloud.ZLimits(1,2) - reference_ptCloud.ZLimits(1,1));
+%         x_scale = (ptCloud.XLimits(1,2) - ptCloud.XLimits(1,1)) \ ...
+%             (reference_ptCloud.XLimits(1,2) - reference_ptCloud.XLimits(1,1));
+%         % Scale transformation of y coordinates.
+%         y_scale = (ptCloud.YLimits(1,2) - ptCloud.YLimits(1,1)) \ ...
+%             (reference_ptCloud.YLimits(1,2) - reference_ptCloud.YLimits(1,1));
+%         % Scale transformation of z coordinates.
+%         z_scale = (ptCloud.ZLimits(1,2) - ptCloud.ZLimits(1,1)) \ ...
+%             (reference_ptCloud.ZLimits(1,2) - reference_ptCloud.ZLimits(1,1));
         % Scale transformation matrix.
-        trans = [1/x_scale,0,0,0;0,1/y_scale,0,0;0,0,1/z_scale,0;0,0,0,1];
+        trans = [0.001,0,0,0;0,0.001,0,0;0,0,0.001,0;0,0,0,1];
         % Perform the scale transformation to the refernce point cloud.
         t_resize = affine3d(trans);
         reference_ptCloud = pctransform(reference_ptCloud,t_resize); 

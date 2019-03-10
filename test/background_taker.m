@@ -1,4 +1,5 @@
 function [background, color_img] = background_taker()
+    cd C:\Users\chijiang\Desktop\Camera
     pipe = realsense.pipeline();
     config = realsense.config();
     config.enable_stream(realsense.stream.depth, 1280, 720, realsense.format.z16, 30)
@@ -24,4 +25,5 @@ function [background, color_img] = background_taker()
         videoplayer(bi_depth)
     end
     background = bi_depth;
+    cd 'test'
 end

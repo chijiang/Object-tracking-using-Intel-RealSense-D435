@@ -42,6 +42,11 @@ function ptCloud = calculate_ptCloud(depth, centroid, bbox, pointcloud)
         scale1 = depth.get_distance(bbox(1), bbox(2));
         scale2 = depth.get_distance(bbox(1)+bbox(3),...
         bbox(2) + bbox(4));
+        if scale1 == 0
+            scale1 = scale2;
+        elseif scale2 == 0
+            scale2 = scale1;
+        end
         % Position of the upper left corner.
         u_l_corner = [(bbox(1) - 640) * scale1/(1280/...
         (2 * tan(65/180*pi/2))), -(720 - bbox(2)...
