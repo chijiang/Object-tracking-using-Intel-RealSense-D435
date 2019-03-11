@@ -38,5 +38,5 @@ function prediction_VidFrame = predicted_VidFrame...
     
 	% Insert the welding position to the RGB image.
     prediction_VidFrame = insertShape(color_img,'circle',...
-			[Pcx Pcy 10],'LineWidth',5,'color','red');
+			[pixel_x pixel_y 10],'LineWidth',5,'color','red');
 end

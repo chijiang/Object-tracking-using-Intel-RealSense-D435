@@ -26,6 +26,7 @@ function set_up_camera(background)
     load('Referenzdatenbank9_2.mat')
     counter = 0;
     objectID = [];
+    tic;
     for i = 1:6000
         [depth, depth_img, color_img] = next_frame(pipe,...
             colorizer, alignedFs);
@@ -59,11 +60,15 @@ function set_up_camera(background)
 %             pos_vector(counter,:) = center_loc;
 
             % Calculate the coordinate of the welding point.
-            welding_pos = object_position(ptCloud,...
-                Referenzdatenbank,objectID,Constants);
+            try
+                welding_pos = object_position(ptCloud,...
+                    Referenzdatenbank,objectID,Constants);
+            catch
+                continue
+            end
 
             % Visulizing the result.
-            videoFrame = create_VideoFrame(img_w_obj,welding_pos,Constants);
+            videoFrame = create_VideoFrame(img_w_obj,welding_pos);
             videoplayer(videoFrame);
 
 %             % The vector from the center location of the workpiece
@@ -80,11 +85,12 @@ function set_up_camera(background)
 
             % If the detection succeeded, add one to the counter.
             counter = counter + 1;
+            t = toc;
 
             % If enough correct positions recorded, break the for loop.
             if counter > Constants.PositionCount
                 finish_time = t;
-                center_location_finish = center_loc;
+%                 center_location_finish = center_loc;
                 break
             end
             continue

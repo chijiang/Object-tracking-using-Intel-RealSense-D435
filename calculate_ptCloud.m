@@ -68,7 +68,7 @@ function ptCloud = calculate_ptCloud(depth, centroid, bbox, pointcloud)
         sampleIndices = findPointsInROI(ptCloud, ROIcoor);
         ptCloud = select(ptCloud,sampleIndices); 
         % Remove unnecessary points.
-        ptCloud = pcdenoise(ptCloud, 'Threshold',0.01);
+        ptCloud = pcdenoise(ptCloud, 'Threshold',0.1);
     end
 	%------------- END OF CODE --------------
 end

@@ -39,7 +39,7 @@ function [errValue, objectID] = icp_Classification(ptCloud,Referenzdatenbank,Con
         % Assign the reference point cloud.
         reference_ptCloud = Referenzdatenbank.(workpieces{idx}).ptCloud;
         
-        % The rotation matrix along the x axis.
+%         % The rotation matrix along the x axis.
         rotx = [1, 0, 0, 0;...
                 0, cos(pi), -sin(pi), 0;...
                 0, sin(pi), cos(pi), 0;...
@@ -84,8 +84,12 @@ function [errValue, objectID] = icp_Classification(ptCloud,Referenzdatenbank,Con
         reference_ptCloud = pctransform(reference_ptCloud,t_trans);
         
         % Perform the icp algorithms to find the root mean squared error.
-        [~,~,rmse] = pcregistericp(reference_ptCloud,ptCloud,'MaxIterations',...
-        Constants.ICP_Parameters.ICP_Pos_iter,'metric','pointToPlane');
+        try
+            [~,~,rmse] = pcregistericp(reference_ptCloud,ptCloud,'MaxIterations',...
+                Constants.ICP_Parameters.ICP_Pos_iter,'metric','pointToPlane');
+        catch
+            rmse = 1000;
+        end
         errValueArray(idx) = rmse;
     end
     
