@@ -64,6 +64,7 @@ function set_up_camera(background)
                 welding_pos = object_position(ptCloud,...
                     Referenzdatenbank,objectID,Constants);
             catch
+                videoplayer(color_img)
                 continue
             end
 
