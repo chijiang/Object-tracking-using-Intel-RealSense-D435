@@ -46,7 +46,7 @@ function set_up_camera(background)
                 % If the error is greater than a threshold, the
                 % classification is not confident enough for the object
                 % recognization.
-                if errValue > Constants.ConfidenceInterval
+                if errValue > 0.015
                    objectID = [];
                    continue
                 else

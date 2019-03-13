@@ -1,0 +1,143 @@
+Microsoft (R) Build Engine version 15.9.21+g9802d43bc3 for .NET Framework
+Copyright (C) Microsoft Corporation. All rights reserved.
+
+Build started 3/13/2019 1:57:26 PM.
+Project "C:\Users\chijiang\Desktop\Camera\test_model_tct\test_model.vcxproj" on node 1 (TcPublishModule target(s)).
+TcRemovePublishedModule:
+  Directory "C:\TwinCAT\3.1\CustomConfig\Modules\test_model\" doesn't exist. Skipping.
+TcPublishModule:
+  Publishing module to folder 'C:\TwinCAT\3.1\CustomConfig\Modules\test_model\' using module installation directory '%SOLUTIONMODULEINSTTPATH%'
+Project "C:\Users\chijiang\Desktop\Camera\test_model_tct\test_model.vcxproj" (1) is building "C:\Users\chijiang\Desktop\Camera\test_model_tct\test_model.vcxproj" (1:2) on node 1 (TcPublishModuleBinaries target(s)).
+CoreClean:
+  Creating directory "C:\TwinCAT\3.1\SDK\\_products\TwinCAT RT (x86)\Release\MATLAB_R2018b\test_model\".
+C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\VC\VCTargets\Microsoft.CppBuild.targets(402,5): warning MSB8038: Spectre mitigation is enabled but Spectre mitigated libraries are not found.  Verify that the Visual Studio Workload includes the Spectre mitigated libraries.  See https://aka.ms/Ofhn4c for more information. [C:\Users\chijiang\Desktop\Camera\test_model_tct\test_model.vcxproj]
+  Creating directory "C:\TwinCAT\3.1\SDK\\_products\TwinCAT RT (x86)\Release\MATLAB_R2018b\test_model\test_model.tlog\".
+InitializeBuildStatus:
+  Creating "C:\TwinCAT\3.1\SDK\\_products\TwinCAT RT (x86)\Release\MATLAB_R2018b\test_model\test_model.tlog\unsuccessfulbuild" because "AlwaysCreate" was specified.
+PreBuildEvent:
+  "C:\TwinCAT\3.1\SDK\\Bin\ExtractVersionInfo" "test_model" "C:\TwinCAT\3.1\SDK\\_products\TwinCAT RT (x86)\Release\MATLAB_R2018b\test_model\\test_model"
+  "C:\TwinCAT\3.1\SDK\\Bin\ExtractVersionInfo" "test_model" "C:\TwinCAT\3.1\SDK\\_products\TwinCAT RT (x86)\Release\MATLAB_R2018b\test_model\\test_model"
+  :VCEnd
+  ExtractVersionInfo could not open header file "C:\TwinCAT\3.1\SDK\\_products\TwinCAT RT (x86)\Release\MATLAB_R2018b\test_model\\test_modelVersion.h" for read!
+ClCompile:
+  C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.16.27023\bin\HostX86\x86\CL.exe /c /IC:\Users\chijiang\Desktop\Camera\test_model_tct\..\ /IC:\Users\chijiang\Desktop\Camera\test_model_tct\ /I"D:\Program Files\MATLAB\R2018b\extern\include\\" /I"D:\Program Files\MATLAB\R2018b\simulink\include\\" /I"D:\Program Files\MATLAB\R2018b\rtw\c\src\\" /I"C:\Users\chijiang\Desktop\Camera\test_model_tct\TwinCAT RT (x86)\\" /I"C:\Users\chijiang\Desktop\Camera\test_model_tct\TwinCAT RT\\" /I"C:\Users\chijiang\Desktop\Camera\test_model_tct\TwinCAT RT\3.1\\" /IC:\Users\chijiang\Desktop\Camera\test_model_tct\ /I"D:\Program Files\MATLAB\R2018b\\rtw\c\src\ext_mode\common" /I"D:\Program Files\MATLAB\R2018b\\rtw\c\src" /I"D:\Program Files\MATLAB\R2018b\\simulink\include" /I"D:\Program Files\MATLAB\R2018b\\extern\include" /IC:\TwinCAT\3.1\SDK\\Include /IC:\TwinCAT\3.1\SDK\\Include\Io /IC:\TwinCAT\3.1\SDK\\Include\Nc /IC:\TwinCAT\3.1\SDK\\Include\CM /IC:\TwinCAT\3.1\SDK\\Include\Plc /IC:\TwinCAT\3.1\SDK\\Include\Stl\Stl /I"C:\TwinCAT\3.1\SDK\\_products\TwinCAT RT (x86)\Release\MATLAB_R2018b\test_model\\" /IC:\WinDDK\7600.16385.1\inc\ddk /IC:\WinDDK\7600.16385.1\inc\crt /IC:\WinDDK\7600.16385.1\inc\api /IC:\WinDDK\7600.16385.1\inc\mfc42 /Zi /nologo /W3 /WX- /diagnostics:classic /MP /O2 /Ob2 /Oy- /D "MODEL=\"test_model\"" /D NUMST=2 /D NCSTATES=0 /D HAVESTDIO /D CLASSIC_INTERFACE=1 /D ALLOCATIONFCN=0 /D TID01EQ=1 /D ONESTEPFCN=0 /D TERMFCN=1 /D MULTI_INSTANCE_CODE=0 /D INTEGER_CODE=0 /D MT=0 /D RT=1 /D USE_RTMODEL /D TC_UNLIMITED_MAP_ENTRIES /D TCMATH_BLOCK_STANDARDLIB=0 /D TC_BUILD=4022 /D USE_CRT_OWN_IMPL /D _X86_ /D i386 /D STD_CALL /D CONDITION_HANDLING /D WIN32_LEAN_AND_MEAN /D _IDWBUILD /D IS_R0 /D WINNT /D _WDM_INCLUDED_ /D _WIN32_WINNT=_WIN32_WINNT_WINXP /D NTDDI_VERSION=NTDDI_WINXPSP2 /D TC_VER=301 /X /GF /Gm- /MT /GS- /Gy /fp:precise /Qspectre /Zc:wchar_t /Zc:forScope /Zc:inline /GR- /Fo"C:\TwinCAT\3.1\SDK\\_products\TwinCAT RT (x86)\Release\MATLAB_R2018b\test_model\\" /Fd"C:\TwinCAT\3.1\SDK\\_products\TwinCAT RT (x86)\Release\MATLAB_R2018b\test_model\vc141.pdb" /Gz /TP /analyze- /FC /errorReport:queue /kernel Ctest_modelClassFactory.cpp Ctest_model.cpp Ctest_modelDrv.cpp TcPch.cpp
+  Ctest_modelClassFactory.cpp
+  Ctest_model.cpp
+  Ctest_modelDrv.cpp
+  TcPch.cpp
+  C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.16.27023\bin\HostX86\x86\CL.exe /c /IC:\Users\chijiang\Desktop\Camera\test_model_tct\..\ /IC:\Users\chijiang\Desktop\Camera\test_model_tct\ /I"D:\Program Files\MATLAB\R2018b\extern\include\\" /I"D:\Program Files\MATLAB\R2018b\simulink\include\\" /I"D:\Program Files\MATLAB\R2018b\rtw\c\src\\" /I"C:\Users\chijiang\Desktop\Camera\test_model_tct\TwinCAT RT (x86)\\" /I"C:\Users\chijiang\Desktop\Camera\test_model_tct\TwinCAT RT\\" /I"C:\Users\chijiang\Desktop\Camera\test_model_tct\TwinCAT RT\3.1\\" /IC:\Users\chijiang\Desktop\Camera\test_model_tct\ /I"D:\Program Files\MATLAB\R2018b\\rtw\c\src\ext_mode\common" /I"D:\Program Files\MATLAB\R2018b\\rtw\c\src" /I"D:\Program Files\MATLAB\R2018b\\simulink\include" /I"D:\Program Files\MATLAB\R2018b\\extern\include" /IC:\TwinCAT\3.1\SDK\\Include /IC:\TwinCAT\3.1\SDK\\Include\Io /IC:\TwinCAT\3.1\SDK\\Include\Nc /IC:\TwinCAT\3.1\SDK\\Include\CM /IC:\TwinCAT\3.1\SDK\\Include\Plc /IC:\TwinCAT\3.1\SDK\\Include\Stl\Stl /I"C:\TwinCAT\3.1\SDK\\_products\TwinCAT RT (x86)\Release\MATLAB_R2018b\test_model\\" /IC:\WinDDK\7600.16385.1\inc\ddk /IC:\WinDDK\7600.16385.1\inc\crt /IC:\WinDDK\7600.16385.1\inc\api /IC:\WinDDK\7600.16385.1\inc\mfc42 /Zi /nologo /W3 /WX- /diagnostics:classic /MP /O2 /Ob2 /Oy- /D "MODEL=\"test_model\"" /D NUMST=2 /D NCSTATES=0 /D HAVESTDIO /D CLASSIC_INTERFACE=1 /D ALLOCATIONFCN=0 /D TID01EQ=1 /D ONESTEPFCN=0 /D TERMFCN=1 /D MULTI_INSTANCE_CODE=0 /D INTEGER_CODE=0 /D MT=0 /D RT=1 /D USE_RTMODEL /D TC_UNLIMITED_MAP_ENTRIES /D TCMATH_BLOCK_STANDARDLIB=0 /D TC_BUILD=4022 /D USE_CRT_OWN_IMPL /D _X86_ /D i386 /D STD_CALL /D CONDITION_HANDLING /D WIN32_LEAN_AND_MEAN /D _IDWBUILD /D IS_R0 /D WINNT /D _WDM_INCLUDED_ /D _WIN32_WINNT=_WIN32_WINNT_WINXP /D NTDDI_VERSION=NTDDI_WINXPSP2 /D TC_VER=301 /X /GF /Gm- /MT /GS- /Gy /fp:precise /Qspectre /Zc:wchar_t /Zc:forScope /Zc:inline /GR- /Fo"C:\TwinCAT\3.1\SDK\\_products\TwinCAT RT (x86)\Release\MATLAB_R2018b\test_model\\" /Fd"C:\TwinCAT\3.1\SDK\\_products\TwinCAT RT (x86)\Release\MATLAB_R2018b\test_model\vc141.pdb" /Gd /TP /analyze- /FC /errorReport:queue /kernel rtGetInf.cpp rtGetNaN.cpp rt_nonfinite.cpp test_model.cpp
+  rtGetInf.cpp
+  rtGetNaN.cpp
+  rt_nonfinite.cpp
+  test_model.cpp
+ResourceCompile:
+  C:\Program Files (x86)\Windows Kits\8.1\bin\x86\rc.exe /l"0x0409" /nologo /fo"C:\TwinCAT\3.1\SDK\\_products\TwinCAT RT (x86)\Release\MATLAB_R2018b\test_model\test_model.res" test_model.rc 
+Link:
+  C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.16.27023\bin\HostX86\x86\link.exe /ERRORREPORT:QUEUE /OUT:"C:\TwinCAT\3.1\SDK\\_products\TwinCAT RT (x86)\Release\MATLAB_R2018b\test_model.sys" /INCREMENTAL:NO /NOLOGO /LIBPATH:"C:\TwinCAT\3.1\..\Functions\TE1400-TargetForMatlabSimulink\Libraries\TwinCAT RT (x86)\R2018b\Release\\" /LIBPATH:"C:\TwinCAT\3.1\..\Functions\TE1400-TargetForMatlabSimulink\Libraries\TwinCAT RT (x86)\R2018b\\" /LIBPATH:"C:\TwinCAT\3.1\SDK\\lib\TwinCAT RT (x86)" /LIBPATH:"C:\TwinCAT\3.1\SDK\\_products\TwinCAT RT (x86)\Release\MATLAB_R2018b\\" TcMatSim.lib TcFramework.lib TcDdkHal.lib TcDdkKrnl.lib /NODEFAULTLIB /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\TwinCAT\3.1\SDK\\_products\TwinCAT RT (x86)\Release\MATLAB_R2018b\test_model.pdb" /SUBSYSTEM:NATIVE /TLBID:1 /ENTRY:"DriverEntry@8" /DYNAMICBASE /NXCOMPAT:NO /MACHINE:X86 /SAFESEH "C:\TwinCAT\3.1\SDK\\_products\TwinCAT RT (x86)\Release\MATLAB_R2018b\test_model\test_model.res"
+  "C:\TwinCAT\3.1\SDK\\_products\TwinCAT RT (x86)\Release\MATLAB_R2018b\test_model\Ctest_modelClassFactory.obj"
+  "C:\TwinCAT\3.1\SDK\\_products\TwinCAT RT (x86)\Release\MATLAB_R2018b\test_model\Ctest_model.obj"
+  "C:\TwinCAT\3.1\SDK\\_products\TwinCAT RT (x86)\Release\MATLAB_R2018b\test_model\rtGetInf.obj"
+  "C:\TwinCAT\3.1\SDK\\_products\TwinCAT RT (x86)\Release\MATLAB_R2018b\test_model\rtGetNaN.obj"
+  "C:\TwinCAT\3.1\SDK\\_products\TwinCAT RT (x86)\Release\MATLAB_R2018b\test_model\rt_nonfinite.obj"
+  "C:\TwinCAT\3.1\SDK\\_products\TwinCAT RT (x86)\Release\MATLAB_R2018b\test_model\test_model.obj"
+  "C:\TwinCAT\3.1\SDK\\_products\TwinCAT RT (x86)\Release\MATLAB_R2018b\test_model\Ctest_modelDrv.obj"
+  "C:\TwinCAT\3.1\SDK\\_products\TwinCAT RT (x86)\Release\MATLAB_R2018b\test_model\TcPch.obj"
+  test_model.vcxproj -> C:\TwinCAT\3.1\SDK\\_products\TwinCAT RT (x86)\Release\MATLAB_R2018b\test_model.sys
+FinalizeBuildStatus:
+  Deleting file "C:\TwinCAT\3.1\SDK\\_products\TwinCAT RT (x86)\Release\MATLAB_R2018b\test_model\test_model.tlog\unsuccessfulbuild".
+  Touching "C:\TwinCAT\3.1\SDK\\_products\TwinCAT RT (x86)\Release\MATLAB_R2018b\test_model\test_model.tlog\test_model.lastbuildstate".
+TcPublishModuleBinaries:
+  Creating directory "C:\TwinCAT\3.1\CustomConfig\Modules\test_model\TwinCAT RT (x86)".
+  Copying file from "C:\TwinCAT\3.1\SDK\\_products\TwinCAT RT (x86)\Release\MATLAB_R2018b\test_model.sys" to "C:\TwinCAT\3.1\CustomConfig\Modules\test_model\TwinCAT RT (x86)\test_model.sys".
+  Copying file from "C:\TwinCAT\3.1\SDK\\_products\TwinCAT RT (x86)\Release\MATLAB_R2018b\test_model.pdb" to "C:\TwinCAT\3.1\CustomConfig\Modules\test_model\TwinCAT RT (x86)\test_model.pdb".
+Done Building Project "C:\Users\chijiang\Desktop\Camera\test_model_tct\test_model.vcxproj" (TcPublishModuleBinaries target(s)).
+Project "C:\Users\chijiang\Desktop\Camera\test_model_tct\test_model.vcxproj" (1) is building "C:\Users\chijiang\Desktop\Camera\test_model_tct\test_model.vcxproj" (1:3) on node 1 (TcPublishModuleBinaries target(s)).
+CoreClean:
+  Creating directory "C:\TwinCAT\3.1\SDK\\_products\TwinCAT RT (x64)\Release\MATLAB_R2018b\test_model\".
+C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\VC\VCTargets\Microsoft.CppBuild.targets(402,5): warning MSB8038: Spectre mitigation is enabled but Spectre mitigated libraries are not found.  Verify that the Visual Studio Workload includes the Spectre mitigated libraries.  See https://aka.ms/Ofhn4c for more information. [C:\Users\chijiang\Desktop\Camera\test_model_tct\test_model.vcxproj]
+  Creating directory "C:\TwinCAT\3.1\SDK\\_products\TwinCAT RT (x64)\Release\MATLAB_R2018b\test_model\test_model.tlog\".
+InitializeBuildStatus:
+  Creating "C:\TwinCAT\3.1\SDK\\_products\TwinCAT RT (x64)\Release\MATLAB_R2018b\test_model\test_model.tlog\unsuccessfulbuild" because "AlwaysCreate" was specified.
+PreBuildEvent:
+  "C:\TwinCAT\3.1\SDK\\Bin\ExtractVersionInfo" "test_model" "C:\TwinCAT\3.1\SDK\\_products\TwinCAT RT (x64)\Release\MATLAB_R2018b\test_model\\test_model"
+  "C:\TwinCAT\3.1\SDK\\Bin\ExtractVersionInfo" "test_model" "C:\TwinCAT\3.1\SDK\\_products\TwinCAT RT (x64)\Release\MATLAB_R2018b\test_model\\test_model"
+  :VCEnd
+  ExtractVersionInfo could not open header file "C:\TwinCAT\3.1\SDK\\_products\TwinCAT RT (x64)\Release\MATLAB_R2018b\test_model\\test_modelVersion.h" for read!
+ClCompile:
+  C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.16.27023\bin\HostX86\x64\CL.exe /c /IC:\Users\chijiang\Desktop\Camera\test_model_tct\..\ /IC:\Users\chijiang\Desktop\Camera\test_model_tct\ /I"D:\Program Files\MATLAB\R2018b\extern\include\\" /I"D:\Program Files\MATLAB\R2018b\simulink\include\\" /I"D:\Program Files\MATLAB\R2018b\rtw\c\src\\" /I"C:\Users\chijiang\Desktop\Camera\test_model_tct\TwinCAT RT (x64)\\" /I"C:\Users\chijiang\Desktop\Camera\test_model_tct\TwinCAT RT\\" /I"C:\Users\chijiang\Desktop\Camera\test_model_tct\TwinCAT RT\3.1\\" /IC:\Users\chijiang\Desktop\Camera\test_model_tct\ /I"D:\Program Files\MATLAB\R2018b\\rtw\c\src\ext_mode\common" /I"D:\Program Files\MATLAB\R2018b\\rtw\c\src" /I"D:\Program Files\MATLAB\R2018b\\simulink\include" /I"D:\Program Files\MATLAB\R2018b\\extern\include" /IC:\TwinCAT\3.1\SDK\\Include /IC:\TwinCAT\3.1\SDK\\Include\Io /IC:\TwinCAT\3.1\SDK\\Include\Nc /IC:\TwinCAT\3.1\SDK\\Include\CM /IC:\TwinCAT\3.1\SDK\\Include\Plc /IC:\TwinCAT\3.1\SDK\\Include\Stl\Stl /IC:\WinDDK\7600.16385.1\inc\ddk /IC:\WinDDK\7600.16385.1\inc\crt /IC:\WinDDK\7600.16385.1\inc\mfc42 /IC:\WinDDK\7600.16385.1\inc\api /I"C:\TwinCAT\3.1\SDK\\_products\TwinCAT RT (x64)\Release\MATLAB_R2018b\test_model\\" /Zi /nologo /W3 /WX- /diagnostics:classic /MP /O2 /Ob2 /Oy- /D "MODEL=\"test_model\"" /D NUMST=2 /D NCSTATES=0 /D HAVESTDIO /D CLASSIC_INTERFACE=1 /D ALLOCATIONFCN=0 /D TID01EQ=1 /D ONESTEPFCN=0 /D TERMFCN=1 /D MULTI_INSTANCE_CODE=0 /D INTEGER_CODE=0 /D MT=0 /D RT=1 /D USE_RTMODEL /D TC_UNLIMITED_MAP_ENTRIES /D TCMATH_BLOCK_STANDARDLIB=0 /D TC_BUILD=4022 /D USE_CRT_OWN_IMPL /D _AMD64_ /D _X64_ /D _WIN64 /D STD_CALL /D CONDITION_HANDLING /D WIN32_LEAN_AND_MEAN /D _IDWBUILD /D IS_R0 /D WINNT /D _WDM_INCLUDED_ /D _WIN32_WINNT=_WIN32_WINNT_WINXP /D NTDDI_VERSION=NTDDI_WINXPSP2 /D TC_VER=301 /X /GF /Gm- /MT /GS- /Gy /fp:precise /Qspectre /Zc:wchar_t /Zc:forScope /Zc:inline /GR- /Fo"C:\TwinCAT\3.1\SDK\\_products\TwinCAT RT (x64)\Release\MATLAB_R2018b\test_model\\" /Fd"C:\TwinCAT\3.1\SDK\\_products\TwinCAT RT (x64)\Release\MATLAB_R2018b\test_model\vc141.pdb" /Gz /TP /analyze- /FC /errorReport:queue /kernel Ctest_modelClassFactory.cpp Ctest_model.cpp Ctest_modelDrv.cpp TcPch.cpp
+  Ctest_modelClassFactory.cpp
+  Ctest_model.cpp
+  Ctest_modelDrv.cpp
+  TcPch.cpp
+  C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.16.27023\bin\HostX86\x64\CL.exe /c /IC:\Users\chijiang\Desktop\Camera\test_model_tct\..\ /IC:\Users\chijiang\Desktop\Camera\test_model_tct\ /I"D:\Program Files\MATLAB\R2018b\extern\include\\" /I"D:\Program Files\MATLAB\R2018b\simulink\include\\" /I"D:\Program Files\MATLAB\R2018b\rtw\c\src\\" /I"C:\Users\chijiang\Desktop\Camera\test_model_tct\TwinCAT RT (x64)\\" /I"C:\Users\chijiang\Desktop\Camera\test_model_tct\TwinCAT RT\\" /I"C:\Users\chijiang\Desktop\Camera\test_model_tct\TwinCAT RT\3.1\\" /IC:\Users\chijiang\Desktop\Camera\test_model_tct\ /I"D:\Program Files\MATLAB\R2018b\\rtw\c\src\ext_mode\common" /I"D:\Program Files\MATLAB\R2018b\\rtw\c\src" /I"D:\Program Files\MATLAB\R2018b\\simulink\include" /I"D:\Program Files\MATLAB\R2018b\\extern\include" /IC:\TwinCAT\3.1\SDK\\Include /IC:\TwinCAT\3.1\SDK\\Include\Io /IC:\TwinCAT\3.1\SDK\\Include\Nc /IC:\TwinCAT\3.1\SDK\\Include\CM /IC:\TwinCAT\3.1\SDK\\Include\Plc /IC:\TwinCAT\3.1\SDK\\Include\Stl\Stl /IC:\WinDDK\7600.16385.1\inc\ddk /IC:\WinDDK\7600.16385.1\inc\crt /IC:\WinDDK\7600.16385.1\inc\mfc42 /IC:\WinDDK\7600.16385.1\inc\api /I"C:\TwinCAT\3.1\SDK\\_products\TwinCAT RT (x64)\Release\MATLAB_R2018b\test_model\\" /Zi /nologo /W3 /WX- /diagnostics:classic /MP /O2 /Ob2 /Oy- /D "MODEL=\"test_model\"" /D NUMST=2 /D NCSTATES=0 /D HAVESTDIO /D CLASSIC_INTERFACE=1 /D ALLOCATIONFCN=0 /D TID01EQ=1 /D ONESTEPFCN=0 /D TERMFCN=1 /D MULTI_INSTANCE_CODE=0 /D INTEGER_CODE=0 /D MT=0 /D RT=1 /D USE_RTMODEL /D TC_UNLIMITED_MAP_ENTRIES /D TCMATH_BLOCK_STANDARDLIB=0 /D TC_BUILD=4022 /D USE_CRT_OWN_IMPL /D _AMD64_ /D _X64_ /D _WIN64 /D STD_CALL /D CONDITION_HANDLING /D WIN32_LEAN_AND_MEAN /D _IDWBUILD /D IS_R0 /D WINNT /D _WDM_INCLUDED_ /D _WIN32_WINNT=_WIN32_WINNT_WINXP /D NTDDI_VERSION=NTDDI_WINXPSP2 /D TC_VER=301 /X /GF /Gm- /MT /GS- /Gy /fp:precise /Qspectre /Zc:wchar_t /Zc:forScope /Zc:inline /GR- /Fo"C:\TwinCAT\3.1\SDK\\_products\TwinCAT RT (x64)\Release\MATLAB_R2018b\test_model\\" /Fd"C:\TwinCAT\3.1\SDK\\_products\TwinCAT RT (x64)\Release\MATLAB_R2018b\test_model\vc141.pdb" /Gd /TP /analyze- /FC /errorReport:queue /kernel rtGetInf.cpp rtGetNaN.cpp rt_nonfinite.cpp test_model.cpp
+  rtGetInf.cpp
+  rtGetNaN.cpp
+  rt_nonfinite.cpp
+  test_model.cpp
+ResourceCompile:
+  C:\Program Files (x86)\Windows Kits\8.1\bin\x86\rc.exe /l"0x0409" /nologo /fo"C:\TwinCAT\3.1\SDK\\_products\TwinCAT RT (x64)\Release\MATLAB_R2018b\test_model\test_model.res" test_model.rc 
+Link:
+  C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.16.27023\bin\HostX86\x64\link.exe /ERRORREPORT:QUEUE /OUT:"C:\TwinCAT\3.1\SDK\\_products\TwinCAT RT (x64)\Release\MATLAB_R2018b\test_model.sys" /NOLOGO /LIBPATH:"C:\TwinCAT\3.1\..\Functions\TE1400-TargetForMatlabSimulink\Libraries\TwinCAT RT (x64)\R2018b\Release\\" /LIBPATH:"C:\TwinCAT\3.1\..\Functions\TE1400-TargetForMatlabSimulink\Libraries\TwinCAT RT (x64)\R2018b\\" /LIBPATH:"C:\TwinCAT\3.1\SDK\\lib\TwinCAT RT (x64)" /LIBPATH:"C:\TwinCAT\3.1\SDK\\_products\TwinCAT RT (x64)\Release\MATLAB_R2018b\\" TcMatSim.lib TcFramework.lib TcDdkHal.lib TcDdkKrnl.lib /NODEFAULTLIB /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\TwinCAT\3.1\SDK\\_products\TwinCAT RT (x64)\Release\MATLAB_R2018b\test_model.pdb" /SUBSYSTEM:NATIVE /TLBID:1 /ENTRY:"DriverEntry" /DYNAMICBASE /NXCOMPAT:NO /IMPLIB:"C:\TwinCAT\3.1\SDK\\_products\TwinCAT RT (x64)\Release\MATLAB_R2018b\test_model.lib" /MACHINE:X64 "C:\TwinCAT\3.1\SDK\\_products\TwinCAT RT (x64)\Release\MATLAB_R2018b\test_model\test_model.res"
+  "C:\TwinCAT\3.1\SDK\\_products\TwinCAT RT (x64)\Release\MATLAB_R2018b\test_model\Ctest_modelClassFactory.obj"
+  "C:\TwinCAT\3.1\SDK\\_products\TwinCAT RT (x64)\Release\MATLAB_R2018b\test_model\Ctest_model.obj"
+  "C:\TwinCAT\3.1\SDK\\_products\TwinCAT RT (x64)\Release\MATLAB_R2018b\test_model\rtGetInf.obj"
+  "C:\TwinCAT\3.1\SDK\\_products\TwinCAT RT (x64)\Release\MATLAB_R2018b\test_model\rtGetNaN.obj"
+  "C:\TwinCAT\3.1\SDK\\_products\TwinCAT RT (x64)\Release\MATLAB_R2018b\test_model\rt_nonfinite.obj"
+  "C:\TwinCAT\3.1\SDK\\_products\TwinCAT RT (x64)\Release\MATLAB_R2018b\test_model\test_model.obj"
+  "C:\TwinCAT\3.1\SDK\\_products\TwinCAT RT (x64)\Release\MATLAB_R2018b\test_model\Ctest_modelDrv.obj"
+  "C:\TwinCAT\3.1\SDK\\_products\TwinCAT RT (x64)\Release\MATLAB_R2018b\test_model\TcPch.obj"
+  test_model.vcxproj -> C:\TwinCAT\3.1\SDK\\_products\TwinCAT RT (x64)\Release\MATLAB_R2018b\test_model.sys
+PostBuildEvent:
+  "C:\WinDDK\7600.16385.1\bin\x86\signtool" sign /v /s PrivateCertStore /n MyTestSigningCert "C:\TwinCAT\3.1\SDK\\_products\TwinCAT RT (x64)\Release\MATLAB_R2018b\test_model.sys"
+  :VCEnd
+  The following certificate was selected:
+      Issued to: MyTestSigningCert
+  
+      Issued by: MyTestSigningCert
+  
+      Expires:   Sun Jan 01 00:59:59 2040
+  
+      SHA1 hash: CED77B2B0B72C06D6CFD89D5DE293872CF2F54F8
+  
+  
+  Done Adding Additional Store
+  Successfully signed: C:\TwinCAT\3.1\SDK\\_products\TwinCAT RT (x64)\Release\MATLAB_R2018b\test_model.sys
+  
+  
+  Number of files successfully Signed: 1
+  
+  Number of warnings: 0
+  
+  Number of errors: 0
+  
+FinalizeBuildStatus:
+  Deleting file "C:\TwinCAT\3.1\SDK\\_products\TwinCAT RT (x64)\Release\MATLAB_R2018b\test_model\test_model.tlog\unsuccessfulbuild".
+  Touching "C:\TwinCAT\3.1\SDK\\_products\TwinCAT RT (x64)\Release\MATLAB_R2018b\test_model\test_model.tlog\test_model.lastbuildstate".
+TcPublishModuleBinaries:
+  Creating directory "C:\TwinCAT\3.1\CustomConfig\Modules\test_model\TwinCAT RT (x64)".
+  Copying file from "C:\TwinCAT\3.1\SDK\\_products\TwinCAT RT (x64)\Release\MATLAB_R2018b\test_model.sys" to "C:\TwinCAT\3.1\CustomConfig\Modules\test_model\TwinCAT RT (x64)\test_model.sys".
+  Copying file from "C:\TwinCAT\3.1\SDK\\_products\TwinCAT RT (x64)\Release\MATLAB_R2018b\test_model.pdb" to "C:\TwinCAT\3.1\CustomConfig\Modules\test_model\TwinCAT RT (x64)\test_model.pdb".
+Done Building Project "C:\Users\chijiang\Desktop\Camera\test_model_tct\test_model.vcxproj" (TcPublishModuleBinaries target(s)).
+Project "C:\Users\chijiang\Desktop\Camera\test_model_tct\test_model.vcxproj" (1) is building "C:\Users\chijiang\Desktop\Camera\test_model_tct\test_model.vcxproj" (1:4) on node 1 (TcPublishAdditionalFiles target(s)).
+TcPublishAdditionalFiles:
+  Copying file from "C:\Users\chijiang\Desktop\Camera\test_model_tct\test_model_PlcOpenPOUs.xml" to "C:\TwinCAT\3.1\CustomConfig\Modules\test_model\test_model_PlcOpenPOUs.xml".
+  Copying file from "C:\Users\chijiang\Desktop\Camera\test_model_tct\test_model_ModuleInfo.xml" to "C:\TwinCAT\3.1\CustomConfig\Modules\test_model\test_model_ModuleInfo.xml".
+Done Building Project "C:\Users\chijiang\Desktop\Camera\test_model_tct\test_model.vcxproj" (TcPublishAdditionalFiles target(s)).
+Done Building Project "C:\Users\chijiang\Desktop\Camera\test_model_tct\test_model.vcxproj" (TcPublishModule target(s)).
+
+Build succeeded.
+
+"C:\Users\chijiang\Desktop\Camera\test_model_tct\test_model.vcxproj" (TcPublishModule target) (1) ->
+"C:\Users\chijiang\Desktop\Camera\test_model_tct\test_model.vcxproj" (TcPublishModuleBinaries target) (1:2) ->
+(PrepareForBuild target) -> 
+  C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\VC\VCTargets\Microsoft.CppBuild.targets(402,5): warning MSB8038: Spectre mitigation is enabled but Spectre mitigated libraries are not found.  Verify that the Visual Studio Workload includes the Spectre mitigated libraries.  See https://aka.ms/Ofhn4c for more information. [C:\Users\chijiang\Desktop\Camera\test_model_tct\test_model.vcxproj]
+
+
+"C:\Users\chijiang\Desktop\Camera\test_model_tct\test_model.vcxproj" (TcPublishModule target) (1) ->
+"C:\Users\chijiang\Desktop\Camera\test_model_tct\test_model.vcxproj" (TcPublishModuleBinaries target) (1:3) ->
+  C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\VC\VCTargets\Microsoft.CppBuild.targets(402,5): warning MSB8038: Spectre mitigation is enabled but Spectre mitigated libraries are not found.  Verify that the Visual Studio Workload includes the Spectre mitigated libraries.  See https://aka.ms/Ofhn4c for more information. [C:\Users\chijiang\Desktop\Camera\test_model_tct\test_model.vcxproj]
+
+    2 Warning(s)
+    0 Error(s)
+
+Time Elapsed 00:00:07.33

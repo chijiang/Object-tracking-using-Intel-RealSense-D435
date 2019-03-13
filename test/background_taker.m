@@ -14,7 +14,8 @@ function [background, color_img] = background_taker()
     depth_sensor.set_option(realsense.option.visual_preset, 0);
     
     videoplayer = vision.VideoPlayer();
-    for i = 1:200
+    videoplayer2 = vision.VideoPlayer();
+    while true
         [depth, depth_img, color_img] = next_frame(pipe,...
             colorizer, alignedFs);
 %         crop_depth(crop_depth == 0) = 255;
@@ -22,7 +23,8 @@ function [background, color_img] = background_taker()
         bi_depth = depth_image_binarize(depth_img, 200);
 %         bi_depth = cast(bi_depth, 'uint8')*255;
 %         bi_depth = bwareaopen(bi_depth,2000);
-        videoplayer(bi_depth)
+        videoplayer(depth_img)
+        videoplayer2(color_img)
     end
     background = bi_depth;
     cd 'test'
