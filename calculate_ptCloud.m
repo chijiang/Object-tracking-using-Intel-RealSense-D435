@@ -41,11 +41,10 @@ function ptCloud = calculate_ptCloud(depth, centroid, bbox, pointcloud)
         bbox = double(bbox);
         scale1 = depth.get_distance(bbox(1), bbox(2));
         scale2 = depth.get_distance(bbox(1)+bbox(3),...
-        bbox(2) + bbox(4));
-        if scale1 == 0
-            scale1 = scale2;
-        elseif scale2 == 0
-            scale2 = scale1;
+            bbox(2) + bbox(4));
+        if scale1 == 0 || scale2 ==0
+            ptCloud = [];
+            return
         end
         % Position of the upper left corner.
         u_l_corner = [(bbox(1) - 640) * scale1/(1280/...
@@ -68,7 +67,7 @@ function ptCloud = calculate_ptCloud(depth, centroid, bbox, pointcloud)
         sampleIndices = findPointsInROI(ptCloud, ROIcoor);
         ptCloud = select(ptCloud,sampleIndices); 
         % Remove unnecessary points.
-        ptCloud = pcdenoise(ptCloud, 'Threshold',0.1);
+        ptCloud = pcdenoise(ptCloud, 'Threshold',0.01);
     end
 	%------------- END OF CODE --------------
 end

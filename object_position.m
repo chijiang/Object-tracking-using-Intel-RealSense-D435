@@ -23,21 +23,21 @@ function weldingPos = object_position(ptCloud,Referenzdatenbank,objectID,Constan
     workpieces = fieldnames(Referenzdatenbank);
     reference_ptCloud = Referenzdatenbank.(workpieces{objectID}).ptCloud;
     
-    % The rotation matrix along the x axis.
-    rotx = [1, 0, 0, 0;...
-            0, cos(pi), -sin(pi), 0;...
-            0, sin(pi), cos(pi), 0;...
-            0, 0, 0, 1];
-    % The rotation matrix along the z axis.
-    rotz = [cos(-pi/2), -sin(-pi/2), 0, 0;...
-            sin(-pi/2), cos(-pi/2), 0, 0;...
-            0, 0, 1, 0;...
-            0, 0, 0, 1];
-    % The rotation matrix for the total rotation.
-    rotation = (rotx*rotz)';
-    % Perform the rotation to the refernce point cloud.
-    t_rot = affine3d(rotation);
-    reference_ptCloud = pctransform(reference_ptCloud,t_rot); 
+%     % The rotation matrix along the x axis.
+%     rotx = [1, 0, 0, 0;...
+%             0, cos(pi), -sin(pi), 0;...
+%             0, sin(pi), cos(pi), 0;...
+%             0, 0, 0, 1];
+%     % The rotation matrix along the z axis.
+%     rotz = [cos(-pi/2), -sin(-pi/2), 0, 0;...
+%             sin(-pi/2), cos(-pi/2), 0, 0;...
+%             0, 0, 1, 0;...
+%             0, 0, 0, 1];
+%     % The rotation matrix for the total rotation.
+%     rotation = (rotx*rotz)';
+%     % Perform the rotation to the refernce point cloud.
+%     t_rot = affine3d(rotation);
+%     reference_ptCloud = pctransform(reference_ptCloud,t_rot); 
 
     % Scale transformation of x coordinates.
     %         x_scale = (ptCloud.XLimits(1,2) - ptCloud.XLimits(1,1)) \ ...
@@ -80,7 +80,7 @@ function weldingPos = object_position(ptCloud,Referenzdatenbank,objectID,Constan
         welding_position = pointCloud(welding_position); 
         % perform rotation, scale transformation, translation, icp
         % transformation on the welding position.
-        welding_position = pctransform(welding_position,t_rot);
+%         welding_position = pctransform(welding_position,t_rot);
         welding_position = pctransform(welding_position,t_resize); 
         welding_position = pctransform(welding_position,t_trans);
         welding_position = pctransform(welding_position,t_ICP);

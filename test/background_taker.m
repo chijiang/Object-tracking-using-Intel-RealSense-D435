@@ -14,7 +14,7 @@ function [background, color_img] = background_taker()
     depth_sensor.set_option(realsense.option.visual_preset, 0);
     
     videoplayer = vision.VideoPlayer();
-    for i = 1:50
+    for i = 1:200
         [depth, depth_img, color_img] = next_frame(pipe,...
             colorizer, alignedFs);
 %         crop_depth(crop_depth == 0) = 255;

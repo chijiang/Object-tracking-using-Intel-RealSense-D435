@@ -7,8 +7,8 @@ function set_up_camera(background)
     config.enable_stream(realsense.stream.color,...
 		1280, 720, realsense.format.rgb8, 30)
     
-    blobAnalysis = vision.BlobAnalysis('MinimumBlobArea',15000,...
-        'MaximumBlobArea',80000);
+    blobAnalysis = vision.BlobAnalysis('MinimumBlobArea',30000,...
+        'MaximumBlobArea',1000000);
     
     colorizer = realsense.colorizer(2);
     align_to = realsense.stream.color;
@@ -52,6 +52,8 @@ function set_up_camera(background)
                 else
                     sprintf('Detect obj: %d', objectID)
                 end
+            else
+                continue
             end
 
             % Record the time into the time vector.
