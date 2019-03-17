@@ -40,11 +40,22 @@ function ptCloud = calculate_ptCloud(depth, centroid, bbox, pointcloud)
         % The parameters are calibrated.
         bbox = double(bbox);
         scale1 = depth.get_distance(bbox(1), bbox(2));
+        if scale1 == 0
+           scale1 = depth.get_distance(bbox(1)+bbox(3), bbox(2)); 
+        end
         scale2 = depth.get_distance(bbox(1)+bbox(3),...
             bbox(2) + bbox(4));
-        if scale1 == 0 || scale2 ==0
+        if scale2 ==0
+           scale2 = depth.get_distance(bbox(1), bbox(2)+bbox(4)); 
+        end
+        if scale1 == 0
+            scale1 = scale2;
+        end
+        if scale2 == 0
+            scale2 = scale1;
+        end
+        if scale1 == 0 || scale2 == 0
             ptCloud = [];
-            return
         end
         % Position of the upper left corner.
         u_l_corner = [(bbox(1) - 640) * scale1/(1280/...
@@ -60,7 +71,7 @@ function ptCloud = calculate_ptCloud(depth, centroid, bbox, pointcloud)
         % The ROI in 3D.
         ROIcoor = [u_l_corner(1), l_r_corner(1); ...
         l_r_corner(2), u_l_corner(2); ...
-        0.8*scale1, 0.958*scale1];
+        0.1, scale1];
 
         % Crop the ROI point cloud out of the entire 
         % point cloud. 

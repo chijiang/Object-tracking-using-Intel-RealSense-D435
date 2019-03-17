@@ -70,7 +70,7 @@ function weldingPos = object_position(ptCloud,Referenzdatenbank,objectID,Constan
     % Perform the icp algorithms to calculate the transformation from the
     % reference point cloud to the workpiece point cloud.
     [t_ICP,~,~] = pcregistericp(reference_ptCloud,ptCloud,'MaxIterations',...
-        Constants.ICP_Parameters.ICP_Pos_iter,'metric','pointToPlane');
+        20,'metric','pointToPlane');
 
     % Convert the welding position into a pointcloud.
     welding_position = Referenzdatenbank.(workpieces{objectID}).WeldingPoints;

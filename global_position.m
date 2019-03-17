@@ -1,4 +1,4 @@
-function [alpha,center_loc] = global_position(centersBright,color_img,depth,Constants)
+function [alpha,center_loc] = global_position(centersBright,color_img,Constants)
     % global_position - Calculating the global position of the center point
     %       of the target workpiece.
     %
@@ -23,13 +23,13 @@ function [alpha,center_loc] = global_position(centersBright,color_img,depth,Cons
     %------------- BEGIN CODE --------------
     
     % Convert color image to gray scale.
-    img = rgb2gray(color_img);
+    img = imbinarize(rgb2gray(color_img));
     for idx = 1 : 3 
         % Find the color of the upper, lower right, lower left corner of
         % the marker.
-        upper = imbinarize(img(round(centersBright(idx,2)-19),round(centersBright(idx,1)),:));
-        lower_right = imbinarize(img(round(centersBright(idx,2)+14),round((centersBright(idx,1)+14)),:));
-        lower_left = imbinarize(img(round(centersBright(idx,2)+14),round((centersBright(idx,1)-14)),:));
+        upper = img(round(centersBright(idx,2)-25),round(centersBright(idx,1)));
+        lower_right = img(round(centersBright(idx,2)+18),round((centersBright(idx,1)+18)),:);
+        lower_left = img(round(centersBright(idx,2)+18),round((centersBright(idx,1)-18)),:);
         % Determin the correct position of marker.
         if upper == 1 && lower_right == 1 && lower_left == 1 
             p2 = zeros(1,2); 
@@ -48,9 +48,9 @@ function [alpha,center_loc] = global_position(centersBright,color_img,depth,Cons
     
     % Calculate the coordiante of the markers according to the camera
     % frame.
-    coor_p1 = rgb2camCoor(depth,p1(1),p1(2));
-    coor_p2 = rgb2camCoor(depth,p2(1),p2(2));
-    coor_p3 = rgb2camCoor(depth,p3(1),p3(2));
+    coor_p1 = rgb2camCoor(p1(1),p1(2));
+    coor_p2 = rgb2camCoor(p2(1),p2(2));
+    coor_p3 = rgb2camCoor(p3(1),p3(2));
     
     % Calculate the coordinate of the center position of the workpiece
     % according to the camera frame.

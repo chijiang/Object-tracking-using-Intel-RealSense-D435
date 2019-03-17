@@ -39,7 +39,7 @@ function [pos_vector,velocityVector] = main_program()
     config.enable_stream(realsense.stream.depth,...
 		1280, 720, realsense.format.z16, 30)
     config.enable_stream(realsense.stream.color,...
-		1920, 1080, realsense.format.rgb8, 30)
+		1280, 720, realsense.format.rgb8, 30)
     
     % Initialize a pointcloud object to calculate the point cloud of target
     % workpiece.

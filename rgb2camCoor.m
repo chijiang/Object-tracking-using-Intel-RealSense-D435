@@ -1,4 +1,4 @@
-function position_cam = rgb2camCoor(depth,pixel_x,pixel_y)
+function position_cam = rgb2camCoor(pixel_x,pixel_y)
     % rgb2camCoor - Conversion from the RGB image frame to the camera frame. 
     %
     % Syntax:  
@@ -20,7 +20,7 @@ function position_cam = rgb2camCoor(depth,pixel_x,pixel_y)
     % Calculate the distance from point to the camera.
     pixel_x = round(pixel_x);
     pixel_y = round(pixel_y);
-    z = depth.get_distance(pixel_x, pixel_y);
+    z = 0.89;
     
     % Calculate the x and y according to the size of the picture, the
     % height z and the view angle of the camera.
