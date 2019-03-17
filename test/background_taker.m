@@ -11,11 +11,11 @@ function [background, color_img] = background_taker()
     profile = pipe.start(config);
     
     depth_sensor = profile.get_device().first('depth_sensor');
-    depth_sensor.set_option(realsense.option.visual_preset, 0);
+    depth_sensor.set_option(realsense.option.visual_preset, 1);
     
     videoplayer = vision.VideoPlayer();
     videoplayer2 = vision.VideoPlayer();
-    while true
+    for i = 1:50
         [depth, depth_img, color_img] = next_frame(pipe,...
             colorizer, alignedFs);
 %         crop_depth(crop_depth == 0) = 255;

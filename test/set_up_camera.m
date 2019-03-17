@@ -20,17 +20,24 @@ function set_up_camera(background)
     depth_sensor = profile.get_device().first('depth_sensor');
     depth_sensor.set_option(realsense.option.visual_preset, 5);
     
-    videoplayer = vision.VideoPlayer();
+%     videoplayer = vision.VideoPlayer();
     
     load('Constants_1.mat')
     load('Referenzdatenbank9_2.mat')
     counter = 0;
     objectID = [];
+    
+    % Vectors
+    time_vector = zeros(Constants.PositionCount,1);
+    pos_vector = zeros(Constants.PositionCount,3);
+    welding_pos_last = [];  % Vector of welding position
+    counter = 1;
+    
     tic;
     for i = 1:6000
         [depth, depth_img, color_img] = next_frame(pipe,...
             colorizer, alignedFs);
-        
+        t = toc;
         [img_w_obj,centroid,~, bbox] = foregrndDetection(depth_img,background,blobAnalysis,color_img);
         if size(bbox, 1) == 1
             % Creating the point cloud of the workpiece.
@@ -46,18 +53,16 @@ function set_up_camera(background)
                 % If the error is greater than a threshold, the
                 % classification is not confident enough for the object
                 % recognization.
-                if errValue > 0.015
+                if errValue > 0.016
                    objectID = [];
                    continue
                 else
                     sprintf('Detect obj: %d', objectID)
                 end
-            else
-                continue
             end
 
             % Record the time into the time vector.
-%             time_vector(counter) = t;
+            time_vector(counter) = t;
             % Record the position into the position vector.
 %             pos_vector(counter,:) = center_loc;
 
@@ -66,20 +71,26 @@ function set_up_camera(background)
                 welding_pos = object_position(ptCloud,...
                     Referenzdatenbank,objectID,Constants);
             catch
-                videoplayer(color_img)
+%                 videoplayer(color_img)
                 continue
             end
-
+            if counter == 1
+                welding_pos_last = welding_pos;
+            else
+                velocity = (welding_pos-welding_pos_last)/t;
+                disp(velocity)
+            end
+            
             % Visulizing the result.
-            videoFrame = create_VideoFrame(img_w_obj,welding_pos);
-            videoplayer(videoFrame);
+%             videoFrame = create_VideoFrame(img_w_obj,welding_pos);
+%             videoplayer(videoFrame);
 
 %             % The vector from the center location of the workpiece
 %             % pointing to the welding position.
 %             weldingVector = welding_pos-center_loc;
 % 
-%             % Calculation of the average moving direction of the
-%             % welding position.
+            % Calculation of the average moving direction of the
+            % welding position.
 %             if counter == 1
 %                 weldingAverageArray = weldingVector;
 %             elseif counter > 1
@@ -97,8 +108,8 @@ function set_up_camera(background)
                 break
             end
             continue
-        else
-            videoplayer(color_img)
+%         else
+%             videoplayer(color_img)
         end
 %         if size(bbox,1) == 1
 %             videoplayer(img_w_obj)
