@@ -27,7 +27,7 @@ function centerBright = findBinMarkers(color_img)
     se = strel('disk',1);
     bw = imdilate(enhanced_roi, se);
     % Finding the circles in image fits the radius of the markers.
-    [centers,rad,~] = imfindcircles(enhanced_roi,[6,10],...
+    [centers,rad,~] = imfindcircles(bw,[6,10],...
         'ObjectPolarity','bright','Method','TwoStage', 'Sensitivity', 0.75);
     % Calculating the position of the marker center point in the whole
     % RGB image.
@@ -44,7 +44,7 @@ function centerBright = findBinMarkers(color_img)
     se = strel('disk',1);
     bw = imdilate(enhanced_roi, se);
     % Finding the circles in image fits the radius of the markers.
-    [centers,rad,~] = imfindcircles(enhanced_roi,[6,10],...
+    [centers,rad,~] = imfindcircles(bw,[6,10],...
         'ObjectPolarity','bright','Method','TwoStage', 'Sensitivity', 0.71);
     % Calculating the position of the marker center point in the whole
     % RGB image.

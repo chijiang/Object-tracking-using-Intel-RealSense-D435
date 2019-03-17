@@ -1,4 +1,4 @@
-function weldingPos = object_position(ptCloud,Referenzdatenbank,objectID,Constants)
+function weldingPos = object_position(ptCloud,Referenzdatenbank,objectID)
     % object_position - Calculate the object position of the welding point.
     %
     % Syntax:  

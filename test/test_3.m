@@ -31,9 +31,6 @@ function [pics, time_vector] = test_3()
     % 5 not very accurate.
     
 %     videoplayer = vision.VideoPlayer();
-    
-    load('Constants_1.mat')
-    load('Referenzdatenbank9_2.mat')
     counter = 1;
     objectID = [];
     
