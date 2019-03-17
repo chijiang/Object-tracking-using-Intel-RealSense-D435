@@ -1,4 +1,4 @@
-function [alpha,center_loc] = global_position(centersBright,color_img,Constants)
+function [alpha,center_loc] = global_position(centerBright,color_img,Constants)
     % global_position - Calculating the global position of the center point
     %       of the target workpiece.
     %
@@ -27,22 +27,22 @@ function [alpha,center_loc] = global_position(centersBright,color_img,Constants)
     for idx = 1 : 3 
         % Find the color of the upper, lower right, lower left corner of
         % the marker.
-        upper = img(round(centersBright(idx,2)-25),round(centersBright(idx,1)));
-        lower_right = img(round(centersBright(idx,2)+18),round((centersBright(idx,1)+18)),:);
-        lower_left = img(round(centersBright(idx,2)+18),round((centersBright(idx,1)-18)),:);
+        upper = img(round(centerBright(idx,2)-25),round(centerBright(idx,1)));
+        lower_right = img(round(centerBright(idx,2)+18),round((centerBright(idx,1)+18)),:);
+        lower_left = img(round(centerBright(idx,2)+18),round((centerBright(idx,1)-18)),:);
         % Determin the correct position of marker.
         if upper == 1 && lower_right == 1 && lower_left == 1 
             p2 = zeros(1,2); 
-            p2(1) = round(centersBright(idx,1)); 
-            p2(2) = round(centersBright(idx,2)); 
+            p2(1) = round(centerBright(idx,1)); 
+            p2(2) = round(centerBright(idx,2)); 
         elseif upper == 0 && lower_right == 0 && lower_left == 0 
             p3 = zeros(1,2);
-            p3(1) = round(centersBright(idx,1)); 
-            p3(2) = round(centersBright(idx,2)); 
+            p3(1) = round(centerBright(idx,1)); 
+            p3(2) = round(centerBright(idx,2)); 
         else
             p1 = zeros(1,2); 
-            p1(1) = round(centersBright(idx,1)); 
-            p1(2) = round(centersBright(idx,2));
+            p1(1) = round(centerBright(idx,1)); 
+            p1(2) = round(centerBright(idx,2));
         end 
     end
     
