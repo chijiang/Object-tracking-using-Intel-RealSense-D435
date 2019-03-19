@@ -25,8 +25,8 @@ function [pixel_x,pixel_y] = camCoor2RGB(welding_pos)
     
     % Calculate the pixel count in horizontal and vertical direction in RGB
     % image of the welding position.
-    pixel_x = x * (1280/(2 * tan(69.4/180*pi/2))) / z + 640;
-    pixel_y = y * (720/(2 * tan(42.5/180*pi/2))) / z + 360;
+    pixel_x = x * (1280/(2 * tan(69.5/180*pi/2))) / z + 640;
+    pixel_y = y * (720/(2 * tan(45/180*pi/2))) / z + 360;
     
     %------------- END OF CODE --------------
 end 

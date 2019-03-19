@@ -1,28 +1,29 @@
 % Load data.
 load('cimg_run_2.mat')
+load('rs.mat')
 cd ..
 
 % Necessary variables.
 load('Constants_1.mat')
 load('Referenzdatenbank9_2.mat')
 %% Set the camera parameters.
-% pipe = realsense.pipeline();
-% config = realsense.config();
-% config.enable_stream(realsense.stream.depth,...
-%     1280, 720, realsense.format.z16, 30)
-% config.enable_stream(realsense.stream.color,...
-%     1280, 720, realsense.format.rgb8, 30)
-% colorizer = realsense.colorizer(2);
-% align_to = realsense.stream.color;
-% alignedFs = realsense.align(align_to);
-% pointcloud = realsense.pointcloud();
-% 
-% blobAnalysis = vision.BlobAnalysis('MinimumBlobArea',30000,...
-%     'MaximumBlobArea',1000000);
-% 
-% profile = pipe.start(config);
-% depth_sensor = profile.get_device().first('depth_sensor');
-% depth_sensor.set_option(realsense.option.visual_preset, 1); 
+pipe = realsense.pipeline();
+config = realsense.config();
+config.enable_stream(realsense.stream.depth,...
+    1280, 720, realsense.format.z16, 30)
+config.enable_stream(realsense.stream.color,...
+    1280, 720, realsense.format.rgb8, 30)
+colorizer = realsense.colorizer(2);
+align_to = realsense.stream.color;
+alignedFs = realsense.align(align_to);
+pointcloud = realsense.pointcloud();
+
+blobAnalysis = vision.BlobAnalysis('MinimumBlobArea',30000,...
+    'MaximumBlobArea',1000000);
+
+profile = pipe.start(config);
+depth_sensor = profile.get_device().first('depth_sensor');
+depth_sensor.set_option(realsense.option.visual_preset, 1); 
 
 %%
 % Video player initialize.
@@ -31,36 +32,52 @@ videoplayer = vision.VideoPlayer();
 last_loc = [];
 % Recorded velocity.
 vel_vec = [];
+% Time vector.
+time_vec = zeros(1,20);
 
 % % Recognition of object.
-% [depth, depth_img, color_img] = next_frame(pipe, colorizer, alignedFs);
-% points = pointcloud.calculate(depth);
-% vertices = points.get_vertices();
-% ptCloud = pointCloud(vertices);
-% [img_w_obj,~,~, bbox] = foregrndDetection(depth_img,background,blobAnalysis,color_img);
+while 1
+    [depth, depth_img, color_img] = next_frame(pipe, colorizer, alignedFs);
+    points = pointcloud.calculate(depth);
+    vertices = points.get_vertices();
+    ptCloud = pointCloud(vertices);
+    [img_w_obj,~,~, bbox] = foregrndDetection(depth_img,background,blobAnalysis,color_img);
 
-ptCloud = ptClouds.ptCloud_2;
-bbox = bboxes.bbox_2;
-color_img = pics.cimg_2;
-ptCloud = crop_ptCloud(ptCloud, bbox);
-[errValue, objectID] = icp_Classification(ptCloud,Referenzdatenbank,Constants);
-weldingPos = object_position(ptCloud,Referenzdatenbank,objectID);
-centerBright = findBinMarkers(color_img);
-[alpha,center_loc] = global_position(centerBright,color_img,Constants);
-p3_loc = find_p3(color_img);
-welding_vector = weldingPos - center_loc;
-p3_center = center_loc - p3_loc;
+    % ptCloud = ptClouds.ptCloud_2;
+    % bbox = bboxes.bbox_2;
+    % color_img = pics.cimg_2;
+    ptCloud = crop_ptCloud(ptCloud, bbox);
+    [errValue, objectID] = icp_Classification(ptCloud,Referenzdatenbank,Constants);
+    weldingPos = object_position(ptCloud,Referenzdatenbank,objectID);
+    centerBright = findBinMarkers(color_img);
+    if size(centerBright,1) == 3
+        [alpha,center_loc] = global_position(centerBright,color_img,Constants);
+    else
+        continue
+    end
+    p3_loc = find_p3(color_img);
+    welding_vector = weldingPos - center_loc;
+    p3_center = center_loc - p3_loc;
+    break
+end
 %%
 % Number of recorded velocities.
 counter = 1;
 % Start recording loop
 i = 1;
+w = waitforbuttonpress;
+% vwriter = VideoWriter('measurement.avi');
+% open(vwriter)
 tic;
 while i < 20
-    % Load image. Use next_frame() instead.
+%     % Load image. Use next_frame() instead.
+%     [~, ~, color_img] = next_frame(pipe, colorizer, alignedFs);
+%     % Time of frame capture.
+%     t = toc;
+%     pics.(genvarname(sprintf('cimg_%d', i))) = color_img;
+%     time_vec(i) = t;
     color_img = pics.(genvarname(sprintf('cimg_%d', i)));
-    % Time of frame capture.
-    t = toc;
+    t = time_vec(i);
     try
         % Calculating center location.
         p3_loc = find_p3(color_img);
@@ -101,12 +118,20 @@ while i < 20
         RGB = insertText(color_img,[10 10],'Binary code not detected',...
             'FontSize', 18);
     end
-    figure
-    imshow(RGB)
+    videoplayer(RGB)
+%     writeVideo(vwriter,RGB);
     i = i+1;
 %     if i == 20
 %         i = 1;
 %     end
 end
+vel_norm = [];
+for i = 1:size(vel_vec, 1)
+    vel_norm(i) = norm(vel_vec(i,:));
+end
+[~, idx] = max(vel_norm);
+velocity = vel_vec(idx, :);
+safty_height = ptCloud.ZLimits(2) - ptCloud.ZLimits(1);
+
 
 cd test
