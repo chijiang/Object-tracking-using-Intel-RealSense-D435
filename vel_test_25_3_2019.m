@@ -120,8 +120,10 @@ for i = 1:size(vel_vec, 1)
     vel_norm(i) = norm(vel_vec(i,:));
 end
 v_m = mean(vel_norm(end-3:end));
-
+tragger = false;
+% sim('start_process')
 run_length = 0.624 - norm(last_loc - start_loc);
 pause(run_length/v_m - toc)
 
+tragger = true;
 % sim('start_process')
