@@ -13,25 +13,25 @@ clc, clear, close all;
 load('Constants_1.mat')
 load('test/rs.mat')
 % load('test/cimg_run_3.mat')
-load('test/cimg_run_5.mat')
+% load('test/cimg_run_5.mat')
 
 %% Set the camera parameters.
-% pipe = realsense.pipeline();
-% config = realsense.config();
-% config.enable_stream(realsense.stream.depth,...
-%     1280, 720, realsense.format.z16, 30)
-% config.enable_stream(realsense.stream.color,...
-%     1280, 720, realsense.format.rgb8, 30)
-% colorizer = realsense.colorizer(2);
-% align_to = realsense.stream.color;
-% alignedFs = realsense.align(align_to);
-% 
-% blobAnalysis = vision.BlobAnalysis('MinimumBlobArea',30000,...
-%     'MaximumBlobArea',1000000);
-% 
-% profile = pipe.start(config);
-% depth_sensor = profile.get_device().first('depth_sensor');
-% depth_sensor.set_option(realsense.option.visual_preset, 1); 
+pipe = realsense.pipeline();
+config = realsense.config();
+config.enable_stream(realsense.stream.depth,...
+    1280, 720, realsense.format.z16, 30)
+config.enable_stream(realsense.stream.color,...
+    1280, 720, realsense.format.rgb8, 30)
+colorizer = realsense.colorizer(2);
+align_to = realsense.stream.color;
+alignedFs = realsense.align(align_to);
+
+blobAnalysis = vision.BlobAnalysis('MinimumBlobArea',30000,...
+    'MaximumBlobArea',1000000);
+
+profile = pipe.start(config);
+depth_sensor = profile.get_device().first('depth_sensor');
+depth_sensor.set_option(realsense.option.visual_preset, 1); 
 
 %% Velocity measurement
 % Video player initialize.
@@ -46,19 +46,19 @@ vel_vec = [];
 counter = 1;
 errImg = 0;
 % Start recording loop
-i = 1;
+% i = 1;
 % vwriter = VideoWriter('measurement.avi');
 % open(vwriter)
 tic;
 while true
-%     % Load image. Use next_frame() instead.
-%     [~, ~, color_img] = next_frame(pipe, colorizer, alignedFs);
-%     % Time of frame capture.
-%     t = toc;
+    % Load image. Use next_frame() instead.
+    [~, ~, color_img] = next_frame(pipe, colorizer, alignedFs);
+    % Time of frame capture.
+    t = toc;
 % %     pics.(genvarname(sprintf('cimg_%d', i))) = color_img;
 % %     time_vec(i) = t;
-    color_img = pics.(genvarname(sprintf('cimg_%d', i)));
-    t = time_vec(i);
+%     color_img = pics.(genvarname(sprintf('cimg_%d', i)));
+%     t = time_vec(i);
     try
         % Calculating center location.
         p3_loc = find_p3(color_img);
@@ -119,10 +119,10 @@ while true
     end
     videoplayer(RGB)
 %     writeVideo(vwriter,RGB);
-    i = i+1;
-    if i == 40
-        break
-    end
+%     i = i+1;
+%     if i == 40
+%         break
+%     end
 end
 tic;
 vel_norm = [];

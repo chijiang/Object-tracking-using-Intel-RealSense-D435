@@ -20,7 +20,7 @@ function position_cam = rgb2camCoor(pixel_x,pixel_y)
     % Calculate the distance from point to the camera.
     pixel_x = round(pixel_x);
     pixel_y = round(pixel_y);
-    z = 0.89;
+    z = 0.9025;
     
     % Calculate the x and y according to the size of the picture, the
     % height z and the view angle of the camera.
