@@ -92,7 +92,7 @@ while true
             vel_vec(counter, :) = velocity;
             acc_vec(counter, :) = acceleration;
             counter = counter + 1;
-            if (norm(acceleration) < 0.12) && (norm(velocity) > 0.1)
+            if (norm(acceleration) < 0.15) && (norm(velocity) > 0.1)
                 no_acc = no_acc + 1;
                 if no_acc > 2
                     break
@@ -131,12 +131,36 @@ for i = 1:size(vel_vec, 1)
 end
 v_m = mean(vel_norm(end-3:end));
 trigger = false;
+toc;
 sim('start_process')
 run_length = 0.624 - norm(last_loc - start_loc);
-
 pause(run_length/v_m - toc)
 
 trigger = true;
 sim('start_process')
+disp('pop')
+pipe.stop()
 
+figure
+plot(vel_norm)
+line([0, ceil(i/10)*10], [v_m, v_m], 'Color', 'red')
+title('Velocity for each frame')
+xlabel('frame number')
+ylabel('velocity [m/s]')
+grid minor
+grid on
+legend('velocity')
+
+acc_norm = [];
+for i = 1:size(vel_vec, 1)
+    acc_norm(i) = norm(acc_vec(i,:));
+end
+figure
+plot(acc_norm, 'r')
+title('Acceleration for each frame')
+xlabel('frame number')
+ylabel('acceleration [m/s^2]')
+grid minor
+grid on
+legend('Acceleration')
 % tcClient.Dispose();
