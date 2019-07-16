@@ -12,12 +12,8 @@ function [pixel_x,pixel_y] = camCoor2RGB(welding_pos)
     % Outputs:
     %    pixel_x - The horizontal pixel count of the welding position.
     %    pixel_y - The vertical pixel count of the welding position.
-    %
-    % Author: Chijiang Duan
-    % email: chijiang.duan@tu-braunschweig.de
-    % Mar 2019; Version 1.0.0
     %------------- BEGIN CODE --------------
-    
+    global viewangle_x viewangle_y
     % Extract the coordinates of the welding postion.
     x = welding_pos(1);
     y = welding_pos(2);
@@ -25,8 +21,8 @@ function [pixel_x,pixel_y] = camCoor2RGB(welding_pos)
     
     % Calculate the pixel count in horizontal and vertical direction in RGB
     % image of the welding position.
-    pixel_x = x * (1280/(2 * tan(69.5/180*pi/2))) / z + 640;
-    pixel_y = y * (720/(2 * tan(45/180*pi/2))) / z + 360;
+    pixel_x = x * (1280/(2 * tan(viewangle_x/180*pi/2))) / z + 640;
+    pixel_y = y * (720/(2 * tan(viewangle_y/180*pi/2))) / z + 360;
     
     %------------- END OF CODE --------------
 end 

@@ -1,20 +1,10 @@
-clc, clear, close all;
-
-% AdsAssembly = NET.addAssembly('C:\TwinCAT\AdsApi\.NET\v2.0.50727\TwinCAT.Ads.dll');
-% import TwinCAT.Ads.*
-% 
-% %% Create TcAdsClient instance
-% tcClient = TcAdsClient;
-% 
-% %% Connect to ADS port 851 on the local machine
-% tcClient.Connect(350);
+clc; clear; close all;
+% Load background.
+load('test/rs.mat')
 
 % Necessary variables.
 load('Constants_1.mat')
-load('test/rs.mat')
-% load('test/cimg_run_3.mat')
-load('test/cimg_run_5.mat')
-
+load('Referenzdatenbank9_2.mat')
 %% Set the camera parameters.
 pipe = realsense.pipeline();
 config = realsense.config();
@@ -25,6 +15,7 @@ config.enable_stream(realsense.stream.color,...
 colorizer = realsense.colorizer(2);
 align_to = realsense.stream.color;
 alignedFs = realsense.align(align_to);
+pointcloud = realsense.pointcloud();
 
 blobAnalysis = vision.BlobAnalysis('MinimumBlobArea',30000,...
     'MaximumBlobArea',1000000);
@@ -33,7 +24,65 @@ profile = pipe.start(config);
 depth_sensor = profile.get_device().first('depth_sensor');
 depth_sensor.set_option(realsense.option.visual_preset, 1); 
 
+global viewangle_x viewangle_y
+viewangle_x = 66.5;
+viewangle_y = 45;
+
+%% Recognition of object.
+
+while 1
+    [depth, depth_img, color_img] = next_frame(pipe, colorizer, alignedFs);
+    points = pointcloud.calculate(depth);
+    vertices = points.get_vertices();
+    ptCloud = pointCloud(vertices);
+    try
+        [img_w_obj,~,~, bbox] = foregrndDetection(depth_img,background,blobAnalysis,color_img);
+        if size(bbox, 1) ~= 1
+            disp('Foreground detection error!!')
+            continue
+        end
+
+        % ptCloud = ptClouds.ptCloud_4;
+        % bbox = bboxes.bbox_4;
+        % color_img = color_ims.color_img_4;
+        ptCloud = crop_ptCloud(ptCloud, bbox);
+        [errValue, objectID] = icp_Classification(ptCloud,Referenzdatenbank,Constants); % Change for camera rotation
+        weldingPos = object_position(ptCloud,Referenzdatenbank,objectID); % Change for camera rotation
+        if isempty(weldingPos)
+            disp('Recognition error!!')
+            continue
+        end
+        centerBright = findBinMarkers(color_img); % If camera rotated:  centerBright = findBinMarkers_r(color_img); // Need adjustment!
+        if size(centerBright,1) == 3
+            [alpha,center_loc] = global_position(centerBright,color_img,Constants);
+        else
+            disp('Binary markers detection error!!')
+            continue
+        end
+        welding_vector = weldingPos - center_loc;
+        break
+    catch
+        disp('More than 3 Binary markers detected!!')
+        continue
+    end
+end
+safty_height = (ptCloud.ZLimits(2) - ptCloud.ZLimits(1)) * 1000;
+% welding_pos_sys = ([0, 1, 0; 1, 0, 0; 0, 0, -1] * welding_vector')' * 1000 + [-284, 196.5, 0];
+welding_pos_sys = [-447.31, 106.52, 37, -291.67, 95.2, 36.5, -189.38, 85.31, 37];
+for i = [1,4,7]
+    welding_pos_sys(i) = welding_pos_sys(i) + 17;
+end
+array_length = numel(welding_pos_sys);
+welding_pos_sys = reshape(welding_pos_sys', [1,array_length]);
+transfer_array = zeros(1,30);
+transfer_array(1:array_length) = welding_pos_sys;
+transfer_array(array_length+1) = 11111;
+sim('write_data_2018a')
+imshow(create_VideoFrame(img_w_obj,weldingPos))
+viscircles(centerBright, [7 7 7])
+
 %% Velocity measurement
+
 % Video player initialize.
 videoplayer = vision.VideoPlayer();
 % Last recorded center location.
@@ -47,6 +96,7 @@ counter = 1;
 errImg = 0;
 % Start recording loop
 i = 1;
+no_acc = 0;
 % vwriter = VideoWriter('measurement.avi');
 % open(vwriter)
 tic;
@@ -59,8 +109,6 @@ while true
 % %     time_vec(i) = t;
 %     color_img = pics.(genvarname(sprintf('cimg_%d', i)));
 %     t = time_vec(i);
-    % If the camera rotated:
-%     color_img = imrotate(color_img, 180);
     try
         % Calculating center location.
         p3_loc = find_p3(color_img);
@@ -79,7 +127,7 @@ while true
         % Calculating the velocity.
         if ~isempty(last_loc)
             % Calculate the velocity if not the first location recorded.
-            velocity = (center_loc - last_loc) / (t - t_last);
+            velocity = norm(center_loc - last_loc) / (t - t_last);
             acceleration = (velocity - last_velocity) / (t - t_last);
             % Assign current loction to the last.
             last_loc = center_loc;
@@ -94,13 +142,13 @@ while true
             vel_vec(counter, :) = velocity;
             acc_vec(counter, :) = acceleration;
             counter = counter + 1;
-            if (norm(acceleration) < 0.12) && (norm(velocity) > 0.1)
+            if (acceleration < 0.12) && (norm(velocity) > 0.05)
                 no_acc = no_acc + 1;
-                if no_acc > 2
+                if no_acc > 4
                     break
                 end
-            else
-                no_acc = 0;
+%             else
+%                 no_acc = 0;
             end
         else
             % Assign the very first location and time point.
@@ -128,18 +176,20 @@ vel_norm = [];
 for i = 1:size(vel_vec, 1)
     vel_norm(i) = norm(vel_vec(i,:));
 end
-v_m = mean(vel_norm(end-3:end));
+v_m = 0.5*median(vel_norm(end-4:end)) + 0.5*mean(vel_norm(end-4:end));
+velo = v_m * 1000;
 trigger = false;
 sim('start_process_2018a')
-run_length = 0.624 - norm(last_loc - start_loc);
+run_length = 0.5135 - norm(last_loc - start_loc);
 
-robot_acc = 10; % 4.6
-pause(run_length/v_m - toc - v_m/2/robot_acc - 0.001) % 0.001 Simulation time
+robot_acc = 4.6; % 10
+% pause(run_length/v_m - toc - v_m/2/robot_acc - 0.001) % 0.001 Simulation time
+pause(run_length/v_m - toc - v_m/2/robot_acc - 0.001)
 
 trigger = true;
 sim('start_process_2018a')
 
-
+%% Draw the diagrams
 figure
 plot(vel_norm)
 line([0, ceil(i/10)*10], [v_m, v_m], 'Color', 'red')
@@ -162,6 +212,5 @@ ylabel('acceleration [m/s^2]')
 grid minor
 grid on
 legend('Acceleration')
-
-pipe.stop();
-% tcClient.Dispose();
+%% Stop camera
+pipe.stop()

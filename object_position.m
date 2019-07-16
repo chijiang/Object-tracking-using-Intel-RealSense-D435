@@ -1,8 +1,8 @@
-function weldingPos = object_position(ptCloud,Referenzdatenbank,objectID)
+function weldingPos = object_position(ptCloud,Rfdata,objectID)
     % object_position - Calculate the object position of the welding point.
     %
     % Syntax:  
-	%	 weldingPos = object_position(ptCloud,Referenzdatenbank,objectID,Constants)
+	%	 weldingPos = object_position(ptCloud,Rfdata,objectID,Constants)
 	%
 	% Inputs:
     %    ptCloud - The taken point cloud of the workpiece.
@@ -13,75 +13,56 @@ function weldingPos = object_position(ptCloud,Referenzdatenbank,objectID)
 	%
     % Outputs:
     %    weldingPos - The calculated welding position.
-    %
-    % Author: Chijiang Duan
-    % email: chijiang.duan@tu-braunschweig.de
-    % Mar 2019; Version 1.0.0
     %------------- BEGIN CODE --------------
     
     % Assign the standard point cloud to the reference point cloud.
-    workpieces = fieldnames(Referenzdatenbank);
-    reference_ptCloud = Referenzdatenbank.(workpieces{objectID}).ptCloud;
-    
-%     % The rotation matrix along the x axis.
-%     rotx = [1, 0, 0, 0;...
-%             0, cos(pi), -sin(pi), 0;...
-%             0, sin(pi), cos(pi), 0;...
-%             0, 0, 0, 1];
-%     % The rotation matrix along the z axis.
-%     rotz = [cos(-pi/2), -sin(-pi/2), 0, 0;...
-%             sin(-pi/2), cos(-pi/2), 0, 0;...
-%             0, 0, 1, 0;...
-%             0, 0, 0, 1];
-%     % The rotation matrix for the total rotation.
-%     rotation = (rotx*rotz)';
-%     % Perform the rotation to the refernce point cloud.
-%     t_rot = affine3d(rotation);
-%     reference_ptCloud = pctransform(reference_ptCloud,t_rot); 
+    workpieces = fieldnames(Rfdata);
+    reference_ptCloud = Rfdata.(workpieces{objectID}).ptCloud;
 
-    % Scale transformation of x coordinates.
-    %         x_scale = (ptCloud.XLimits(1,2) - ptCloud.XLimits(1,1)) \ ...
-    %             (reference_ptCloud.XLimits(1,2) - reference_ptCloud.XLimits(1,1));
-    %         % Scale transformation of y coordinates.
-    %         y_scale = (ptCloud.YLimits(1,2) - ptCloud.YLimits(1,1)) \ ...
-    %             (reference_ptCloud.YLimits(1,2) - reference_ptCloud.YLimits(1,1));
-    %         % Scale transformation of z coordinates.
-    %         z_scale = (ptCloud.ZLimits(1,2) - ptCloud.ZLimits(1,1)) \ ...
-    %             (reference_ptCloud.ZLimits(1,2) - reference_ptCloud.ZLimits(1,1));
-    % Scale transformation matrix.
-    trans = [0.001,0,0,0;0,0.001,0,0;0,0,0.001,0;0,0,0,1];
-    % Perform the scale transformation to the refernce point cloud.
-    t_resize = affine3d(trans);
-    reference_ptCloud = pctransform(reference_ptCloud,t_resize); 
+    % The rotation matrix along the z axis.
+    rotz = [cos(-pi), -sin(-pi), 0, 0;...
+            sin(-pi), cos(-pi), 0, 0;...
+            0, 0, 1, 0;...
+            0, 0, 0, 1];
+    % Perform the rotation to the refernce point cloud.
+    t_rot = affine3d(rotz);
+    reference_ptCloud = pctransform(reference_ptCloud,t_rot); 
+
+    % Scale transformation.
+    reference_ptCloud = pcresize(reference_ptCloud, 0.001);
 
     % The center offset in x axis.
-    x_diff = ((ptCloud.XLimits(1,2)-ptCloud.XLimits(1,1))/2)+ptCloud.XLimits(1,1)-...
-        (((reference_ptCloud.XLimits(1,2)-reference_ptCloud.XLimits(1,1))/2)+reference_ptCloud.XLimits(1,1));
+    x_diff = ((ptCloud.XLimits(1,2)-ptCloud.XLimits(1,1))/2)+...
+        ptCloud.XLimits(1,1)-(((reference_ptCloud.XLimits(1,2)-...
+        reference_ptCloud.XLimits(1,1))/2)+reference_ptCloud.XLimits(1,1));
     % The center offset in y axis.
-    y_diff = ((ptCloud.YLimits(1,2)-ptCloud.YLimits(1,1))/2)+ptCloud.YLimits(1,1)-...
-        (((reference_ptCloud.YLimits(1,2)-reference_ptCloud.YLimits(1,1))/2)+reference_ptCloud.YLimits(1,1));
+    y_diff = ((ptCloud.YLimits(1,2)-ptCloud.YLimits(1,1))/2)+...
+        ptCloud.YLimits(1,1)-(((reference_ptCloud.YLimits(1,2)-...
+        reference_ptCloud.YLimits(1,1))/2)+reference_ptCloud.YLimits(1,1));
     % The center offset in z axis.
-    z_diff = ((ptCloud.ZLimits(1,2)-ptCloud.ZLimits(1,1))/2)+ptCloud.ZLimits(1,1)-...
-        (((reference_ptCloud.ZLimits(1,2)-reference_ptCloud.ZLimits(1,1))/2)+reference_ptCloud.ZLimits(1,1));
+    z_diff = ((ptCloud.ZLimits(1,2)-ptCloud.ZLimits(1,1))/2)+...
+        ptCloud.ZLimits(1,1)-(((reference_ptCloud.ZLimits(1,2)-...
+        reference_ptCloud.ZLimits(1,1))/2)+reference_ptCloud.ZLimits(1,1));
     % Perform the translation to the reference point cloud.
-    t_trans = affine3d([1,0,0,0;0,1,0,0;0,0,1,0;x_diff,y_diff,z_diff,1]);
+	t_trans = affine3d([1,0,0,0;0,1,0,0;0,0,1,0;x_diff,y_diff,z_diff,1]);
     reference_ptCloud = pctransform(reference_ptCloud,t_trans);
 
     % Perform the icp algorithms to calculate the transformation from the
     % reference point cloud to the workpiece point cloud.
-    [t_ICP,~,~] = pcregistericp(reference_ptCloud,ptCloud,'MaxIterations',...
-        20,'metric','pointToPlane');
+    [t_ICP,~,~] = pcregistericp(reference_ptCloud,pcdenoise(ptCloud,...
+        'Threshold', 0.01),'MaxIterations',...
+        100,'metric','pointToPlane');
 
     % Convert the welding position into a pointcloud.
-    welding_position = Referenzdatenbank.(workpieces{objectID}).WeldingPoints;
+    welding_position = Rfdata.(workpieces{objectID}).WeldingPoints;
     if isempty(welding_position)
         weldingPos = [];
     else
         welding_position = pointCloud(welding_position); 
         % perform rotation, scale transformation, translation, icp
         % transformation on the welding position.
-%         welding_position = pctransform(welding_position,t_rot);
-        welding_position = pctransform(welding_position,t_resize); 
+        welding_position = pctransform(welding_position,t_rot);
+        welding_position = pcresize(welding_position,0.001);
         welding_position = pctransform(welding_position,t_trans);
         welding_position = pctransform(welding_position,t_ICP);
 

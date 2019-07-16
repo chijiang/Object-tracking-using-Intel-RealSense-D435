@@ -1,5 +1,17 @@
 function p3_loc = find_p3(color_img)
-    roi = imcrop(color_img, [500, 1, 100, 720]);
+    % find_p3 - Find the position of p3 binary mark on the workpiece 
+    %   carrier.
+    %
+    % Syntax:  
+	%	p3_loc = find_p3(color_img)
+	%
+	% Inputs:
+    %	 color_img - RGB image.
+	%
+    % Outputs:
+    %    p3_loc - The p3 position.
+    %------------- BEGIN CODE --------------
+    roi = imcrop(color_img, [790, 1, 100, 720]);
     % Convert the ROI image into a binary image.
     roi_bin = imbinarize(rgb2gray(roi));
     % Finding edge using sobel filter.
@@ -12,7 +24,7 @@ function p3_loc = find_p3(color_img)
         'ObjectPolarity','bright','Method','TwoStage', 'Sensitivity', 0.7);
     % Calculating the position of the marker center point in the whole
     % RGB image.
-    centers(:,1) = centers(:,1) + 500;
+    centers(:,1) = centers(:,1) + 790;
     centers(:,2) = centers(:,2);
     centerBright = centers;
     
@@ -32,8 +44,11 @@ function p3_loc = find_p3(color_img)
             end
             p3 = zeros(1,2);
             p3(1) = round(centerBright(idx,1)); 
-            p3(2) = round(centerBright(idx,2)); 
+            p3(2) = round(centerBright(idx,2));
         end
     end
+    % Converte the p3 location from the image coordinate to real world
+    % corrdinate.
     p3_loc = rgb2camCoor(p3(1),p3(2));
+    %------------- END OF CODE --------------
 end

@@ -3,7 +3,8 @@ function [depth, depth_img, color_img] = next_frame(pipe, colorizer, alignedFs)
 	% 	the Intel® RealSense™ D435 camera. 
     %
     % Syntax:  
-	%		[depth, depth_img, color_img] = getFrame_Realsense(pipe, colorizer, alignedFs)
+	%		[depth, depth_img, color_img] = getFrame_Realsense(...
+    %                                         pipe, colorizer, alignedFs)
     %
 	% Inputs:
     %    pipe - realsense.pipeline object, needs to be initialized 
@@ -39,9 +40,11 @@ function [depth, depth_img, color_img] = next_frame(pipe, colorizer, alignedFs)
 	
 	% Getting the images from both frames.
     data = depth_c.get_data();
-    depth_img = permute(reshape(data',[3,depth_c.get_width(),depth_c.get_height()]),[3 2 1]);
+    depth_img = permute(reshape(data',[3,depth_c.get_width(),...
+        depth_c.get_height()]),[3 2 1]);
     data = color.get_data();
-    color_img = permute(reshape(data',[3,color.get_width(),color.get_height()]),[3 2 1]);
+    color_img = permute(reshape(data',[3,color.get_width(),...
+        color.get_height()]),[3 2 1]);
 	
 	%------------- END OF CODE --------------
 end
